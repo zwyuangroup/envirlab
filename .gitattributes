@@ -1,0 +1,2 @@
+*.datagz filter=lfs diff=lfs merge=lfs -text
+_.datagz filter=lfs diff=lfs merge=lfs -text
