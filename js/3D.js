@@ -31,7 +31,7 @@ function ThreeDManager() {
 				xtype: "box",
 				layout: "fit",
 				margin: 9,
-				html: "<iframe width=1200 height=680 src='http://jsxngx.seu.edu.cn/XnfzZy/10284/区域磷循环动态虚拟仿真实验/index.html' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
+				html: "<iframe width=1200 height=680 src='http://jsxngx.seu.edu.cn/XnfzZy/10284/njumcs/index.html' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
 			}
 
 
