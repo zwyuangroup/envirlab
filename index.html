@@ -1,28 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-if (document.referrer === ''){ 
-    document.open();
-    document.write('<P>非法浏览当前页面,请登录！<span id="second" >3</span>秒钟之后跳转  </p>');
-    document.close();
-} 
-
-<script type="text/javascript">    
-   var num = document.getElementById("second").innerHTML;  
-   function count()  
-    {  
-        num--;  
-        document.getElementById("second").innerHTML=num;  
-        if(num==0)  
-        {  
-            location.assign("/login");  
-       }  
-   }  
-    setInterval("count()",1000);  
-function back()  
-   {  
-       window.history.back();  
-  }  
- </script>   
+   
 <head>
     <title>环境虚拟仿真实验平台</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
