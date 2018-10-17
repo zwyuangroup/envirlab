@@ -94,7 +94,7 @@
             if(item.find('email').text()==email.value && item.find('password').text()==password.value)
             {
                 
-                window.location.replace('https://www.njumce.com/envirlab/index.html');
+                window.location.replace('https://www.njumce.com/envirlab-platform/index.html');
                 
 
             } 
