@@ -84,24 +84,24 @@
 	ModalSignin.prototype.clickin = function() {
         
         var xml;
-        var email = document.getElementById("signin-email");
+        var username = document.getElementById("signin-username");
         var password = document.getElementById("signin-password");
         $.get('users.xml', null, function (data, textStatus) {
             xml=data;
             $(xml).find('details').each( function(){
             var item = $(this);
 
-            if(item.find('email').text()==email.value && item.find('password').text()==password.value)
+            if(item.find('username').text()==username.value && item.find('password').text()==password.value)
             {
                 
                 window.location.replace('https://www.njumce.com/envirlab-platform/index.html');
                 
 
             } 
-            if(item.find('email').text()!=email.value )
+            if(item.find('username').text()!=username.value )
             {
-            	toggleClass(email, 'cd-signin-modal__input--has-error', true);
-		        toggleClass(email.nextElementSibling, 'cd-signin-modal__error--is-visible', true);
+            	toggleClass(username, 'cd-signin-modal__input--has-error', true);
+		        toggleClass(username.nextElementSibling, 'cd-signin-modal__error--is-visible', true);
             }
                 
              });
