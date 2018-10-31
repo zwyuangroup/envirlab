@@ -115,6 +115,6 @@ switch(viewConfig.environment) {
 		FileMenu = [];
 		break;
 	case environment.WebOffline:
-		FileMenu = [FileMenuWeb];
+		FileMenu = [];
 		break;
 }
