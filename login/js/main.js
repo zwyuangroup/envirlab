@@ -90,19 +90,19 @@
             xml=data;
             $(xml).find('details').each( function(){
             var item = $(this);
-
+            breakme:{
             if(item.find('username').text()==username.value && item.find('password').text()==password.value)
             {
                 
                 window.location.replace('https://www.njumce.com/envirlab-platform/index.html');
-                
+                break breakme;
 
-            } 
-            if(item.find('username').text()!=username.value )
+            } else
             {
             	toggleClass(username, 'cd-signin-modal__input--has-error', true);
 		        toggleClass(username.nextElementSibling, 'cd-signin-modal__error--is-visible', true);
             }
+        }
                 
              });
         });
