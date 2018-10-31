@@ -1088,14 +1088,21 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
             items: FileMenu.concat([{
                     hidden: is_ebook,
                     cls: 'button',
-                    /*glyph: 0xf015,*/
+                    glyph: 0xf015,
                     iconCls: 'icon-icon',
 
                     href: '//',
                     tooltip: 'Home'
                 },
                 '->',
+                
                 {
+                    hidden: (!viewConfig.primitiveGroup),
+                    text: getText('开始'),
+                    itemId: 'valued',
+                    iconCls: 'green-icon',
+                    glyph: 0xf055,
+                    menu: [{
                     text: getText('文件'),
                     itemId: "filegroup",
                     glyph: 0xf15b,
@@ -1123,14 +1130,7 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                         }
                     ]
                 },'-'
-                ,
-                {
-                    hidden: (!viewConfig.primitiveGroup),
-                    text: getText('添加图元'),
-                    itemId: 'valued',
-                    iconCls: 'green-icon',
-                    glyph: 0xf055,
-                    menu: [{
+                ,{
                             xtype: "component",
                             indent: false,
                             html: "<b>" + getText('系统动力学模型') + "</b>",
