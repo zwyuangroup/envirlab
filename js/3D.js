@@ -1,4 +1,7 @@
 function ThreeDManager() {
+    var str=location.href; 
+	var num=str.indexOf("=") 
+	str=str.substr(num+1); 
 	var win = new Ext.Window({
 		title: getText('3D模拟'),
 		layout: 'fit',
