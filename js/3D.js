@@ -31,7 +31,7 @@ function ThreeDManager() {
 				xtype: "box",
 				layout: "fit",
 				margin: 9,
-				html: "<iframe width=1200 height=650 src='http://jsxngx.seu.edu.cn/XnfzZy/10284/njumcs/index.html' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
+				html: "<iframe width=1200 height=650 src='javascript:window.location='http://jsxngx.seu.edu.cn/XnfzZy/10284/njumcs/index.html' + str ' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
 			}
 
 
