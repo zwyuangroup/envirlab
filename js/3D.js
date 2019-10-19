@@ -2,6 +2,7 @@ function ThreeDManager() {
     var str=location.href; 
 	var num=str.indexOf("=") 
 	str=str.substr(num+1); 
+    var link=javascript:window.location='http://jsxngx.seu.edu.cn/XnfzZy/10284/njumcs/index.html' + str
 	var win = new Ext.Window({
 		title: getText('3D模拟'),
 		layout: 'fit',
@@ -34,7 +35,7 @@ function ThreeDManager() {
 				xtype: "box",
 				layout: "fit",
 				margin: 9,
-				html: "<iframe width=1200 height=650 src='javascript:window.location='http://jsxngx.seu.edu.cn/XnfzZy/10284/njumcs/index.html' + str ' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
+				html: "<iframe width=1200 height=650 href=' link ' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
 			}
 
 
