@@ -1353,7 +1353,7 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                         runModel();
                     },
                     scope: this
-                }, {
+                }, /*{
                     itemId: '3Drun',
                     text: getText('仿真'),
                     iconCls: 'blue-icon',
@@ -1361,7 +1361,7 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                     tooltip: getText('虚拟仿真') + ' ' + cmd("Enter"),
                     handler: ThreeDManager
                     
-                },{
+                }, */{
                     xtype: 'tbseparator',
                     hidden: (!is_editor) || is_embed
                 },
@@ -1525,17 +1525,15 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                             hidden: (!is_editor),
                             text: "导入",
                             glyph: 0xf093,
-                            menu: [
-                                /*{
-                                									text: getText("Insight Maker 链接..."),
-                                									handler: function() {
-                                										showInsertModelWindow({
-                                											x: 200,
-                                											y: 100
-                                										});
-                                									}
-                                								},*/
-                                {
+                            menu: [/*{
+									text: getText("链接..."),
+									handler: function() {
+										showInsertModelWindow({
+											x: 200,
+											y: 100
+										});
+									}
+                                }, */{
                                     text: getText("文件..."),
                                     handler: importInsightMaker
                                 },
@@ -1551,7 +1549,6 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                             text: "导出",
                             glyph: 0xf019,
                             menu: [{
-                                    hidden: (!viewConfig.showImportExport),
                                     text: getText("下载"),
                                     handler: function() {
                                         downloadFile("Model.InsightMaker", getGraphXml(graph).replace(/mxGraphModel/g, "InsightMakerModel"),"text/xml");
