@@ -1241,7 +1241,7 @@ var downloadButton = function(name){
 				          res += "\r\n" + cells.join(",");
 				        });
 
-						downloadFile(name+".csv", res);
+						downloadFile(name, res, 'text/csv');
 					}
 				};
 			}
@@ -1335,5 +1335,8 @@ var downloadButton = function(name){
 
 				var xml = (mxUtils.getXml(root));
 
-				downloadFile("Insight Maker Diagram.svg", xml);
+				downloadFile(
+					"Insight Maker Diagram.svg",
+					xml,
+					"text/svg");
 			};

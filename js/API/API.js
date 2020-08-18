@@ -1,7 +1,7 @@
 "use strict";
 /*
 
-Copyright 2010-2015 Scott Fortmann-Roe. All rights reserved.
+Copyright 2010-2020 Scott Fortmann-Roe. All rights reserved.
 
 This file may distributed and/or modified under the
 terms of the Insight Maker Public License (https://InsightMaker.com/impl).
@@ -222,30 +222,22 @@ Downloads a file.
 Parameters:
 
 fileName - The name of the file to download
-data - The data to download.
+data - The data to download
+type - The type of file
 
 */
 
-function downloadFile(fileName, data) {
-	// Create Blob and attach it to ObjectURL
-	var blob = new Blob([data], {type: "octet/stream"}),
-	url = window.URL.createObjectURL(blob);
+function downloadFile(fileName, data, type) {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
 	
-	// Create download link and click it
-	var a = document.createElement("a");
-	a.style.display="none";
+	var blob = new Blob([data], {type: type || "octet/stream"}),
+	    url = window.URL.createObjectURL(blob);
 	a.href = url;
 	a.download = fileName;
-	document.body.appendChild(a);
 	a.click();
-	
-	// The setTimeout is a fix to make it work in Firefox
-	// Without it, the objectURL is removed before the click-event is triggered
-	// And the download does not work
-	setTimeout(function() {
-		window.URL.revokeObjectURL(url);
-		a.remove();
-	},1);
+	window.URL.revokeObjectURL(url);
+	a.remove();
 };
 
 /*
@@ -863,7 +855,7 @@ Examples:
 function runModel(config) {
 	if (simulationRunning()) {
 		if( (!simulate.config.silent) && (! config.resultsWindow) ){
-			mxUtils.alert(getText("您有一个尚未完成的现有模拟运行。 关闭结果窗口或按窗口的“停止”按钮。 然后，您可以运行新的模拟。"));
+			mxUtils.alert(getText("You have an existing simulation running that has not yet completed. Either close the results window or press the window's 'Stop' button. You may then run a new simulation."));
 			simulate.resultsWindow.show();
 			return;
 		}
@@ -2241,10 +2233,10 @@ function showEditor(primitive, annotations) {
 	} else if(primitive.value.nodeName == "Stock"){
 		var checkbox = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('将此库存限制为正值'),
+			boxLabel: getText('Restrict this stock to positive values'),
 			checked: getNonNegative(primitive),
 			autoEl: {
-                'data-qtip': "如果选中，则不允许库的值低于零。 可以调整流出率以确保满足该条件。"
+                'data-qtip': "If checked, the value of the stock will not be allowed to fall below zero. The rates of outflows may be adjusted to ensure this condition is met."
             }
 		});
 				
@@ -2262,10 +2254,10 @@ function showEditor(primitive, annotations) {
 	} else if(primitive.value.nodeName == "Flow"){
 		var checkbox = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('将此流量限制为正数'),
+			boxLabel: getText('Restrict this flow to positive rates'),
 			checked: getNonNegative(primitive),
 			autoEl: {
-                'data-qtip': "如果选中，则如果计算的速率小于零，则不会应用流量。"
+                'data-qtip': "If checked, the flow will not be applied if the calculated rate is less than zero."
             }
 		});
 				
@@ -2304,21 +2296,21 @@ function showEditor(primitive, annotations) {
 		
 		var recalculate = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('重新计算每个时间步'),
+			boxLabel: getText('Recalculate each time step'),
 			checked: getTriggerRecalculate(primitive),
 			margin: '0 0 0 15',
 			autoEl: {
-                'data-qtip': "如果不是这样，则将对等式进行一次评估，并根据该计算调度触发时间。 如果是这样，则会在系统状态发生变化时重新计算超时或概率。"
+                'data-qtip': "If this is not true, the equation will be evaluated once and the trigger time scheduled based on that calculation. If this is true, the timeout or probability will be recalculated as the state of the system changes."
             }
 		});
 		
 		var repeat = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('触发后重复'),
+			boxLabel: getText('Repeat after triggering'),
 			checked: getTriggerRepeat(primitive),
 			margin: '0 0 0 15',
 			autoEl: {
-                'data-qtip': "如果是这样，则在触发转换后将重新安排转换。 如果不是这样，则只有在源状态再次变为活动状态时才会重新调度转换。"
+                'data-qtip': "If this is true, the transition will be rescheduled after it is triggered. If this is not true, the transition will only be rescheduled if its source state becomes active again."
             }
 		});
 		
@@ -3700,13 +3692,18 @@ function pressButton(button) {
 
 }
 
+var trusted = is_owner;
 function runAction(code, errHeader, button) {
 	try {
-		eval("\"use strict;\"\n\n" + code);
+		var msg = 'This insight is requesting permission to execute custom code. For security reasons, you should only run custom code in trusted insights.\n\nAre you sure you want to run code in this insight?';
+		if (trusted || confirm(msg)) {
+			trusted = true;
+			eval("\"use strict;\"\n\n" + code);
+		}
 	} catch (err) {
 		errHeader = errHeader || '';
 		Ext.Msg.show({
-			title: getText('动作错误'),
+			title: getText('Action Error'),
 			msg: errHeader + '<p><tt>' + err + "</tt></p><p><b>Code:</b></p><p><tt><pre>" + code + "</pre></tt></p>",
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR

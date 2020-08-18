@@ -1,7 +1,7 @@
 "use strict";
 /*
 
-Copyright 2010-2015 Scott Fortmann-Roe. All rights reserved.
+Copyright 2010-2018 Scott Fortmann-Roe. All rights reserved.
 
 This file may distributed and/or modified under the
 terms of the Insight Maker Public License (https://InsightMaker.com/impl).
@@ -13,7 +13,7 @@ if(! sn){
 	var fn = sn.fn;
 	var ns = fn["number->string"];
 
-	sn.raise = function(conditionType,message){
+	sn.raise = function(conditionType, message){
 		if (message == "division by exact zero"){
 			throw "MSG: You cannot divide by 0."
 		}else{
@@ -232,7 +232,7 @@ Vector.prototype.collapseDimensions = function(target){
 				if(!(targetLevel instanceof Vector)){
 					selector.push(function(x){return functionBank["sum"](x[0].items)});
 					base = base.items[0];
-				}else if(keysMatch(base.namesLC, targetLevel.namesLC)){
+				}else if((base.namesLC === undefined && targetLevel.namesLC === undefined) || (base.namesLC !== undefined && targetLevel.namesLC !== undefined && keysMatch(base.namesLC, targetLevel.namesLC))){
 					selector.push("*");
 					base = base.items[0];
 					targetLevel = targetLevel.items[0]
@@ -395,7 +395,7 @@ Vector.prototype.recurseApply = function(operation){
 	return this;
 };
 Vector.prototype.fullNames = function(){
-	if(this.items[0] instanceof Vector){
+	if((this.items[0] instanceof Vector) && this.items[0].names){
 		var subn = this.items[0].fullNames()
 		var n = [];
 		for(var i = 0; i < this.names.length; i++){
@@ -2220,7 +2220,7 @@ function trueValue(q){
 }
 
 function isLocal() {
-	return (document.location.hostname == "localhost" || document.location.hostname == "insightmaker.dev" || document.location.hostname == "calc.dev" );
+	return (document.location.hostname == "localhost" || document.location.hostname == "insightmaker.test" || document.location.hostname == "calc.test" );
 }
 
 function isUndefined(item){

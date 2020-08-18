@@ -151,7 +151,10 @@ function textEquations(){
 					xtype: "button",
 					margin: 3,
 					handler: function(){
-						new mxXmlRequest(builder_path + "/download.php", $.param({name: "Model", format: "InsightMaker", "data": getGraphXml(graph).replace(/mxGraphModel/g,"InsightMakerModel")})).simulate(document, "_blank");
+						downloadFile(
+							"Model.InsightMaker",
+							getGraphXml(graph).replace(/mxGraphModel/g,"InsightMakerModel"),
+							"text/xml");
 					}
 				}
 				]

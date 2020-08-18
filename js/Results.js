@@ -1442,7 +1442,10 @@ function createResultsWindow(displayInformation, config) {
 			if (sliderPrimitives(["Variable", "Flow"]).length > 0) {
 				scripter.dockedPanel = Ext.create("Ext.Panel", {
 					xtype: "panel",
-					layout: "fit",
+					layout: {
+						type: "vbox",
+						align: "stretch"
+					},
 					items: [createSliders(["Variable", "Flow"], function(cell, value) {
 						if (!scripter.isFinished) {
 							var val = new Material(value);
@@ -1944,7 +1947,7 @@ function createResultsWindow(displayInformation, config) {
 		},
 		{
 			type: 'gear',
-			tooltip: 'Edit Tite',
+			tooltip: 'Edit Title',
 			handler: function(){
 				Ext.Msg.prompt('编辑结果标题', '输入这些模拟结果的标题：', function(btn, text){
 					if (btn == 'ok'){

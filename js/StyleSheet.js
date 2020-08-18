@@ -67,11 +67,10 @@ function showStyleManager() {
 					glyph: 0xf0ed,
 					handler: function(){
 
-						new mxXmlRequest(builder_path + "/download.php", $.param({
-							name: "Insight Maker Style Sheet",
-							"format": "json",
-							"data": JSON.stringify(getStyleSheet())
-						})).simulate(document, "_blank");
+						downloadFile(
+							"Insight Maker Style Sheet.json",
+							JSON.stringify(getStyleSheet()),
+							"application/json");
 						
 					},
 					margin: 4

@@ -1495,14 +1495,6 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                             handler: blockUnfold(showUnfoldingWin),
                             scope: this
                         },
-                        {
-                            hidden: (!is_editor) || is_ebook,
-                            text: getText('发布文章') + "...",
-                            glyph: 0xf0f6,
-                            tooltip: getText('创建一个描述模型的清晰静态网页'),
-                            handler: blockUnfold(articleWindow),
-                            scope: this
-                        },
                         '-', {
                             itemId: 'embed_but',
                             text: getText('嵌入网页') + "...",
@@ -1544,7 +1536,6 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                                 									}
                                 								},*/
                                 {
-                                    hidden: (!viewConfig.showImportExport),
                                     text: getText("文件..."),
                                     handler: importInsightMaker
                                 },
@@ -1563,7 +1554,7 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
                                     hidden: (!viewConfig.showImportExport),
                                     text: getText("下载"),
                                     handler: function() {
-                                        downloadFile("Model.InsightMaker", getGraphXml(graph).replace(/mxGraphModel/g, "InsightMakerModel"));
+                                        downloadFile("Model.InsightMaker", getGraphXml(graph).replace(/mxGraphModel/g, "InsightMakerModel"),"text/xml");
                                     }
                                 }, '-',
                                 {

@@ -147,7 +147,17 @@ function executeUnfoldAction(action) {
 		if (items.length == []) {
 			items = findAll();
 		}
-		setOpacity(items, data.opacity);
+		var ghosts = [];
+		var nonGhosts = [];
+		items.forEach(function(cell) {
+			if (cell.value.nodeName == "Ghost") {
+				ghosts.push(cell)
+			} else {
+				nonGhosts.push(cell);
+			}
+		})
+		setOpacity(nonGhosts, data.opacity);
+		setOpacity(ghosts, data.opacity * .3);
 		graph.getModel().endUpdate();
 	} else if (action.type == "action") {
 		//lastStepTypes.push("diagram")
@@ -170,8 +180,11 @@ function executeUnfoldAction(action) {
 		} else {
 			collapseFolder(folders);
 		}
+	} else if (action.type == "valueChange") {
+		var data = JSON.parse(action.data);
+		setValue(findID(data.ids), data.newValue);
 	} else {
-		alert("Unknown action!");
+		alert("未知行为！");
 		console.log(action);
 	}
 }
@@ -268,6 +281,23 @@ var revealUnfoldButtons = function(showUnfold) {
 		function loadNoteMessage() {
 			var data = JSON.parse(selectedNode.get("data"));
 			Ext.getCmp("unfoldingPrimitivesNotes").setValue(data.ids);
+		}
+
+		function saveChangeValue() {
+			if (Ext.getCmp("unfoldingValuePrimitives")) {
+				var newValue = Ext.getCmp("unfoldingNewValue").getValue();
+				var ids = Ext.getCmp("unfoldingValuePrimitives").getValue();
+				selectedNode.set("data", JSON.stringify({
+					newValue: newValue,
+					ids: ids
+				}));
+			}
+		}
+
+		function loadChangeValue() {
+			var data = JSON.parse(selectedNode.get("data"));
+			Ext.getCmp("unfoldingValuePrimitives").setValue(data.ids);
+			Ext.getCmp("unfoldingNewValue").setValue(data.newValue);
 		}
 
 		function saveFolder() {
@@ -392,6 +422,9 @@ var revealUnfoldButtons = function(showUnfold) {
 				} else if (type == "folder") {
 					configs.getLayout().setActiveItem(6);
 					loadFolder();
+				} else if (type == "valueChange") {
+					configs.getLayout().setActiveItem(8);
+					loadChangeValue();
 				}
 			}
 			
@@ -501,6 +534,17 @@ var revealUnfoldButtons = function(showUnfold) {
 							}
 						},
 						'-', {
+							text: getText('改变数值'),
+							handler: function() {
+								addNewNode({
+									text: getText("数值改变"),
+									data: "{\"newValue\": \"100\", \"ids\": []}",
+									type: "valueChange",
+									leaf: true
+								});
+							}
+						},
+						'-', {
 							text: getText('开始模拟'),
 							handler: function() {
 								addNewNode({
@@ -593,6 +637,32 @@ var revealUnfoldButtons = function(showUnfold) {
 			data: storeData
 		});
 
+		storeData = [];
+		prims = findType(["Stock", "Flow", "Variable"]);
+		for (var i = 0; i < prims.length; i++) {
+			var n = getName(prims[i]);
+			storeData.push({
+				pid: getID(prims[i]),
+				pname: isDefined(n) ? n : "--"
+			});
+		}
+
+		//console.log(storeData)
+		storeData.sort(function(a, b) {
+			return a.pname.localeCompare(b.pname);
+		});
+
+		var valuedConfigStore = new Ext.data.JsonStore({
+			fields: [{
+				name: 'pid',
+				type: 'string'
+			}, {
+				name: 'pname',
+				type: 'string'
+			}],
+			data: storeData
+		});
+
 
 		var configs = Ext.create('Ext.container.Container', {
 			flex: 1,
@@ -602,7 +672,7 @@ var revealUnfoldButtons = function(showUnfold) {
 					padding: 8,
 					bodyStyle: 'background:none',
 					border: false,
-					html: '<p style="color:grey; text-align:center; line-height:1.5em">使用讲述构建模型的分步演练。 您可以逐个显示模型，显示消息并运行模拟。<br/> </ br>完成故事后，请考虑发布模型并与他人共享。</p>'
+					html: '<p style="color:grey; text-align:center; line-height:1.5em">使用讲述构建模型的分步演练。 您可以逐个显示模型，显示消息并运行模拟。<br/> </ br>完成故事后，请考虑将模型与他人共享。</p>'
 				}, {
 					xtype: "container",
 					padding: 8,
@@ -903,7 +973,51 @@ var revealUnfoldButtons = function(showUnfold) {
 							]
 						}
 						
-					
+					]
+				},
+
+				{
+					xtype: "container",
+					padding: 8,
+					bodyStyle: 'background:none',
+					border: false,
+					layout: {
+						type: 'vbox',
+						align: 'stretch'
+					},
+					items: [{
+							xtype: "displayfield",
+							value: getText("新值") + ":"
+						}, {
+							xtype: "textfield",
+							id: "unfoldingNewValue",
+							hideLabel: true,
+							listeners: {
+								change: saveChangeValue
+							}
+						}, 
+						{
+							xtype: "displayfield",
+							value: getText("数值改变的图元") + ":",
+							style: {
+								'margin-top': '20px'
+							}
+						},
+
+						Ext.create('Ext.form.field.Tag', {
+							hideLabel: true,
+							name: 'unfoldingValuePrimitives',
+							filterPickList: true,
+							id: 'unfoldingValuePrimitives',
+							displayField: 'pname',
+							valueField: 'pid',
+							queryMode: 'local',
+							store: valuedConfigStore,
+							emptyText: getText("图元"),
+							listeners: {
+								change: saveChangeValue
+							}
+						})
 
 					]
 				}
@@ -1049,86 +1163,6 @@ var revealUnfoldButtons = function(showUnfold) {
 		}
 	}
 
-	function publishArticle() {
-		if (drupal_node_ID == -1) {
-			mxUtils.alert("You must save the Insight before publishing an article.");
-			closeAllWindows();
-			updateProperties();
-		} else if (published == false){
-			mxUtils.alert("You must make the Insight public before publishing or updating an article.");
-			closeAllWindows();
-			updateProperties();
-		}else {
-			
-
-			graph.getModel().beginUpdate();
-			
-			var edit = new mxCellAttributeChange(getSetting(), "article", JSON.stringify({
-				comments: Ext.getCmp("articleAllowComments").getValue(),
-				facebookUID: Ext.getCmp("articleFacebookUID").getValue()
-			}));
-			graph.getModel().execute(edit);
-			
-			graph.getModel().endUpdate();
-
-
-			var progress = Ext.MessageBox.show({
-
-				icon: 'run-icon',
-				width: 300,
-				closable: false,
-				modal: true,
-				progress: true,
-				progressText: ' '
-			});
-			progress.wait(getText("<i class='fa fa-file-text-o fa-5x' style='color: lightgrey; float: left; margin-right: 15px; margin-bottom: 8px'></i> Insight Maker正在创建您的文章... <br/> <br/>这可能需要几分钟时间。 您的文章将反映上次保存模型的状态。"))
-
-			var request = $.ajax({
-				type: "GET",
-				url: "/builder/StoryConverter.php",
-				timeout: 900000, 
-				data: {
-					nid: drupal_node_ID,
-					config: getSetting().getAttribute("article")
-				}
-			});
-
-			request.done(function(msg) {
-				//console.log(msg)
-
-				if ((/CONVERSION_COMPLETED/).test(msg)) {
-					var path = "https://insightmaker.com/article/" + drupal_node_ID + "/" + getURLTitle();
-
-					Ext.MessageBox.show({
-						title: getText('文章已创建'),
-						msg: getText("您的文章已成功创建。 您可以通过<br><br><a href='" + path + "' target='_blank'>" + path + "</a>查看。<br/><br/>如果您对故事进行了更改，则需要更新文章。"),
-						buttons: Ext.MessageBox.OK,
-						icon: Ext.MessageBox.INFO
-					});
-
-					has_article = true;
-					saveModel();
-
-					configureArticle();
-				} else {
-					progress.close();
-					mxUtils.alert("无法创建文章。 请将此报告给Insight Maker团队。", "error", false);
-
-					has_article = false;
-					saveModel();
-
-					configureArticle();
-				}
-			});
-
-			request.fail(function(jqXHR, textStatus, code) {
-				progress.close();
-				mxUtils.alert("无法创建文章： " + textStatus + " - " + code, "error", false);
-			});
-		}
-
-	}
-
 	function deleteArticle() {
 		var request = $.ajax({
 			type: "GET",
@@ -1146,143 +1180,6 @@ var revealUnfoldButtons = function(showUnfold) {
 		configureArticle();
 	}
 
-
-	function articleWindow(){
-		var data = JSON.parse(getSetting().getAttribute("article"));
-		
-		var win = new Ext.Window({
-			title: getText('发表文章'),
-			tools: [{
-				type: 'help',
-				tooltip: getText('帮助'),
-				callback: function(panel, tool, event) {
-					showURL("/storytelling")
-				}
-			}],
-			autoScroll: true,
-			closeAction: 'destroy',
-			border: false,
-			modal: true,
-			resizable: false,
-			maximizable: false,
-			shadow: true,
-			buttonAlign: 'right',
-			width: Math.min(Ext.getBody().getViewSize().width, 600),
-			height: Math.min(Ext.getBody().getViewSize().height, 510),
-
-			layout: {
-				type: 'vbox',
-				align: 'stretch'
-			},
-			items: [{
-				xtype:"box",
-				margin: 10,
-				html: "<p>一篇文章将您的故事转换为静态网页。 模型图和模拟结果作为静态图像放在文章中。 确保使用 <a href='#' onclick='closeAllWindows(); showUnfoldingWin()'> 讲述</a> 在发布文章之前。 您可以在发布后删除或更新您的文章。</p> <p>您可以选择允许读者使用Facebook评论对您的文章发表评论。 您还可以指定数字Facebook用户ID作为讨论的主持人。</p></p>"
-			 },{
-					xtype: "container",
-					layout: {
-						type: 'hbox',
-						align: 'middle'
-					},
-					padding: 8,
-					style: {
-						"border-top": "dashed 1px lightgrey"
-					},
-					items: [{
-						xtype: "box",
-						html: "<i class='fa fa-file-text-o fa-3x' style='color: lightgrey'></i>",
-						margin: 4
-					}, {
-						xtype: "box",
-						html: getText("文章未发布"),
-						id: "articleText",
-						style: {
-							"margin-right": "8px",
-							"overflow": "hidden",
-							"text-overflow": "ellipsis"
-						},
-						margin: 4,
-						flex: 1
-					}, {
-						xtype: "button",
-						text: getText("发布文章"),
-						tooltip: getText("为故事创建静态文章。"),
-						glyph: 0xf0ee,
-						id: "articlePublish",
-						handler: publishArticle,
-						margin: 4
-					}, {
-						xtype: "button",
-						text: getText("更新"),
-						tooltip: getText("更新已发布的文章以反映故事的更改。"),
-						glyph: 0xf021,
-						id: "articleRefresh",
-						handler: publishArticle,
-						margin: 4
-					}, {
-						xtype: "button",
-						text: getText("删除"),
-						tooltip: getText("删除已发布文章。"),
-						glyph: 0xf05e,
-						id: "articleDelete",
-						handler: deleteArticle,
-						/*cls: "x-btn-default-toolbar-small",*/
-						margin: 4
-					}]
-				},
-				
-				{
-				        xtype: 'fieldset',
-				        title: '评论选项',
-				        collapsible: false,
-						margin: 10,
-				        defaults: {
-				            labelWidth: 160,
-				            anchor: '100%',
-				            layout: {
-				                type: 'hbox',
-				                defaultMargins: {top: 0, right: 5, bottom: 0, left: 0}
-				            }
-				        },
-				        items: [{
-				            xtype: 'checkboxfield',
-				            fieldLabel: '允许评论',
-							checked: data.comments,
-							id: "articleAllowComments"
-				        },
-						{
-				            xtype: 'numberfield',
-				            fieldLabel: '评论人',
-							emptyText: "Facebook用户数字ID",
-							value: data.facebookUID,
-							allowDecimals: false,
-							autoStripChars: true,
-							minValue: 0,
-							id: "articleFacebookUID"
-				        }]
-					}],
-
-			
-			buttons: [
-				'->',  {
-					scale: "large",
-					glyph: 0xf00c,
-					text: getText('完成'),
-					handler: function() {
-						win.close();
-
-
-					}
-				}
-			]
-
-		});
-
-		win.show();
-		
-
-		configureArticle()
-	}
 	
 	function blockUnfold(fn){
 		return function(){

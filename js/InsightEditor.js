@@ -1,7 +1,7 @@
 "use strict";
 /*
 
-Copyright 2010-2015 Scott Fortmann-Roe. All rights reserved.
+Copyright 2010-2018 Scott Fortmann-Roe. All rights reserved.
 
 This file may distributed and/or modified under the
 terms of the Insight Maker Public License (https://InsightMaker.com/impl).
@@ -74,7 +74,7 @@ function renderTimeBut(value) {
 	Ext.Function.defer(function() {
 		new Ext.Button({
 			text: getText("修改时间设置"),
-			
+
 			padding: 0,
 			margin: 0,
 			handler: function(btn, e) {
@@ -100,7 +100,7 @@ function callAPI(e) {
 }
 
 function isLocal() {
-	return (document.location.hostname == "localhost") || (document.location.hostname == "insightmaker.dev");
+	return (document.location.hostname == "localhost") || (document.location.hostname == "insightmaker.test");
 }
 
 mxGraph.prototype.stopEditing = function(a) {
@@ -109,26 +109,32 @@ mxGraph.prototype.stopEditing = function(a) {
 	}
 }
 
+mxObjectCodec.prototype.isExcluded = function(obj, attr, value, write)
+{
+	return attr == mxObjectIdentity.FIELD_NAME || (attr == 'origCache') ||
+		mxUtils.indexOf(this.exclude, attr) >= 0;
+};
+
 mxGraph.prototype.duplicateCells = function(cells, append)
 {
 	cells = (cells != null) ? cells : this.getSelectionCells();
 	append = (append != null) ? append : true;
-	
+
 	cells = this.model.getTopmostCells(cells);
-	
+
 	var model = this.getModel();
 	var s = this.gridSize;
 	var select = [];
-	
+
 	model.beginUpdate();
 	try
 	{
 		for (var i = 0; i < cells.length; i++)
 		{
 			var parent = model.getParent(cells[i]);
-			var child = this.moveCells([cells[i]], s, s, true, parent)[0]; 
+			var child = this.moveCells([cells[i]], s, s, true, parent)[0];
 			select.push(child);
-			
+
 			// Maintains child index by inserting after cloned in parent
 			if (!append)
 			{
@@ -141,14 +147,14 @@ mxGraph.prototype.duplicateCells = function(cells, append)
 	{
 		model.endUpdate();
 	}
-	
+
 	return select;
 };
 
 
 var equationRenderer = function(eq, perserveLines) {
 	var res = eq;
-	
+
 
 	res = res.replace(/</g, "&lt;");
 	res = res.replace(/>/g, "&gt;");
@@ -157,7 +163,7 @@ var equationRenderer = function(eq, perserveLines) {
 	res = res.replace(/(«.*?»)/g, "<font color='Orange'>$1</font>");
 	res = res.replace(/\b([\d\.e]+)\b/g, "<font color='DeepSkyBlue'>$1</font>");
 	res = res.replace(/(\{.*?\})/g, "<font color='Orange'>$1</font>");
-	
+
 	if (/\\n/.test(res)) {
 		if(perserveLines === true){
 			res = res.replace(/\\n/g, "<br>");
@@ -217,19 +223,11 @@ var undoHistory;
 
 
 function main() {
-
-	/*Ext.FocusManager.enable();
-	Ext.FocusManager.keyNav.disable(); //needed for firefox graph cell name editing (spaces, backspace)
-	Ext.FocusManager.shouldShowFocusFrame = function() {
-		return false;
-	};*/
-			
-
 	Ext.QuickTips.init();
 
 
 	mxConstants.DEFAULT_HOTSPOT = 0.3;
-	mxConstants.LINE_HEIGHT = 1.15;
+	mxConstants.LINE_HEIGHT = 1.2075;
 
 	//Change the settings for touch devices
 
@@ -272,13 +270,13 @@ function main() {
 
 	// Larger tolerance and grid for real touch devices
 	if (!(mxClient.IS_TOUCH || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
-		
+
 	} else {
-		
+
 		mxGraph.prototype.collapsedImage=new mxImage(mxClient.imageBasePath+"/collapsed.gif", 18, 18);
 		mxGraph.prototype.expandedImage=new mxImage(mxClient.imageBasePath+"/expanded.gif", 18, 18);
-		
-		
+
+
 		mxShape.prototype.svgStrokeTolerance = 18;
 		mxVertexHandler.prototype.tolerance = 12;
 		mxEdgeHandler.prototype.tolerance = 12;
@@ -300,7 +298,7 @@ function main() {
 			// Blocks further processing of the event
 			evt.consume();
 		});
-		
+
 
 		mxPanningHandler.prototype.isPanningTrigger = function(me) {
 			var evt = me.getEvent();
@@ -457,11 +455,11 @@ function main() {
 	mxEdgeHandler.prototype.removeEnabled = true;
 
 	graph.isHtmlLabel = function(cell) {
-		//return false;
 		var isHTML = cell != null && cell.value != null && (cell.value.nodeName != "Display");
 
 		return isHTML;
 	};
+
 	graph.isWrapping = graph.isHtmlLabel;
 
 	graph.isCellLocked = function(cell) {
@@ -524,10 +522,11 @@ function main() {
 
 	mxPanel = Ext.create('Ext.Component', {
 		border: false,
-		id: "mxPanelForModelGraph"
+		id: "mxPanelForModelGraph",
+		style: {'line-height': 0}
 	});
-	
- 
+
+
 
 	mainPanel = Ext.create('Ext.Panel', {
 		region: 'center',
@@ -565,7 +564,7 @@ function main() {
 				scope: this,
 				id: 'unfoldUnfoldBut',
 				handler: function() {
-					
+
 					revealUnfoldButtons(true);
 					beginUnfolding();
 				}
@@ -631,8 +630,8 @@ function main() {
 			document.activeElement.blur()
 		}
     });
-	
-	
+
+
 	var connectionChangeHandler = function(sender, evt) {
 		var item = evt.getProperty("edge");
 		if (item.value.nodeName == "Link") {
@@ -655,11 +654,7 @@ function main() {
 
 
 	mxPanel.getEl().dom.style.overflow = 'auto';
-	/*if (mxClient.IS_MAC && mxClient.IS_SF) {
-		graph.addListener(mxEvent.SIZE, function(graph) {
-			graph.container.style.overflow = 'auto';
-		});
-	}*/
+
 
 	graph.model.styleForCellChanged = function(cell, style) {
 		var x = mxGraphModel.prototype.styleForCellChanged(cell, style);
@@ -696,9 +691,7 @@ function main() {
 	});
 
 	graph.addListener(mxEvent.CLICK, function(sender, evt) {
-
 		var cell = evt.getProperty('cell');
-		var realEvt = evt.getProperty('event');
 		if (!evt.isConsumed()) {
 			if (cell == null) {
 				graph.clearSelection();
@@ -707,7 +700,7 @@ function main() {
 	});
 
 
-	// Initializes the graph as the DOM for the panel has now been created	
+	// Initializes the graph as the DOM for the panel has now been created
 	graph.init(mxPanel.getEl().dom);
 	graph.setConnectable(viewConfig.allowEdits);
 	graph.setDropEnabled(true);
@@ -796,7 +789,7 @@ function main() {
 				}
 			}
 		}
-		
+
 		if (connectionType() !== 'Link' && source && target) {
 			if (orig(source).value.nodeName == 'Stock' || orig(source).value.nodeName == 'State') {
 				if (orig(source).value.nodeName != orig(target).value.nodeName) {
@@ -804,31 +797,21 @@ function main() {
 				}
 			}
 		}
-		
+
 		if (edge) {
 			if (edge.value.nodeName == 'Transition' && ((source && orig(source).value.nodeName == 'Stock') || (target && orig(target).value.nodeName == 'Stock'))) {
 				return getText('您无法将转换连接到库。');
 			}
-			
+
 			if (edge.value.nodeName == 'Flow' && ( (source && orig(source).value.nodeName == 'State') || (target && orig(target).value.nodeName == 'State'))) {
 				return getText('您无法将流连接到状态。');
 			}
 		}
-		
+
 		return mxGraph.prototype.getEdgeValidationError.apply(this, arguments);
 	};
 
 
-	/*	if (true && is_editor && drupal_node_ID != -1) {
- var sharer = new mxSession(graph.getModel(), "/builder/hub.php?init&id=" + drupal_node_ID, "/builder/hub.php?id=" + drupal_node_ID, "/builder/hub.php?id=" + drupal_node_ID);
-        sharer.start();
-        sharer.createUndoableEdit = function(changes)
-        {
-            var edit = mxSession.prototype.createUndoableEdit(changes);
-            edit.changes.animate = true;
-            return edit;
-        }
-	}*/
 
 	if ((graph_source_data != null && graph_source_data.length > 0) || drupal_node_ID == -1) {
 		var code;
@@ -854,9 +837,9 @@ function main() {
 
 	if (viewConfig.saveEnabled) {
 		var mgr = new mxAutoSaveManager(graph);
-		mgr.autoSaveThreshold = 5;
-		mgr.autoSaveDelay = 10;
-		mgr.autoSaveThrottle = 2;
+		mgr.autoSaveThreshold = 0;
+		mgr.autoSaveDelay = 0;
+		mgr.autoSaveThrottle = 0;
 		mgr.save = function() {
 			if (graph_title != "") {
 				saveModel();
@@ -874,7 +857,6 @@ function main() {
 	//Update folder displays between collapsed and full versions
 	graph.addListener(mxEvent.CELLS_FOLDED, function(sender, evt) {
 		var cells = evt.properties.cells;
-		var collapse = evt.properties.collapse;
 		for (var i = 0; i < cells.length; i++) {
 			setPicture(cells[i]);
 			setLabelPosition(cells[i]);
@@ -890,8 +872,7 @@ function main() {
 			}
 		}
 		var selectedNonGhost = selected && (graph.getSelectionCount() == 1 ? graph.getSelectionCell().value.nodeName != "Ghost" : true);
-		
-		
+
 
 		toolbarItems.down('#folder').setDisabled(graph.getSelectionCount() <= 0);
 		toolbarItems.down('#ghostBut').setDisabled(graph.getSelectionCount() != 1 || ((!isValued(graph.getSelectionCell()) && graph.getSelectionCell().value.nodeName != "Picture" && graph.getSelectionCell().value.nodeName != "Agents")) || graph.getSelectionCell().value.nodeName == "Flow" || graph.getSelectionCell().value.nodeName == "Transition" || graph.getSelectionCell().value.nodeName == "Ghost");
@@ -979,9 +960,10 @@ function main() {
 
 	graph.getTooltipForCell = function(cell) {
 		if (linkedResults && cell != null) {
+			cell = orig(cell);
 			var displayInformation = linkedResults.displayInformation;
 			//console.log(displayInformation);
-			
+
 			var displaySeries = [];
 			var displayIds = [];
 			var defaultColorIndex = 0;
@@ -989,7 +971,7 @@ function main() {
 				if (cell.id == displayInformation.ids[i]) {
 					var x = displayInformation.elementIds[i];
 					displayIds.push(x);
-					
+
 					var c = null;
 					if (!isGray(displayInformation.colors[i])) {
 						c = displayInformation.colors[i];
@@ -998,7 +980,7 @@ function main() {
 						defaultColorIndex++;
 						defaultColorIndex = defaultColorIndex % defaultColors.length;
 					}
-					
+
 					displaySeries.push({
 						type: 'line',
 						axis: "left",
@@ -1010,14 +992,14 @@ function main() {
 						smooth: false,
 						style: {'stroke-width': 3}
 					});
-					
+
 				}
 			}
-			
+
 			if(displayIds.length == 0){
 				return undefined;
 			}
-			
+
 			return {
 						flex: 1,
 				width: 200,
@@ -1054,7 +1036,7 @@ function main() {
 						],
 						series: displaySeries
 					};
-					
+
 		} else {
 			return "";
 		}
@@ -1094,6 +1076,12 @@ function main() {
 	// Enables guides
 	mxGraphHandler.prototype.guidesEnabled = true;
 
+	// we don't want a click for a cell in a folder to propagate up to the group
+	mxGraphHandler.prototype.isPropagateSelectionCell = function(cell, immediate, me)
+	{
+		return false;
+	};
+
 	mxGraphHandler.prototype.mouseDown = function(sender, me) {
 		if (!me.isConsumed() && this.isEnabled() && this.graph.isEnabled() && me.getState() != null) {
 			var cell = this.getInitialCellForEvent(me);
@@ -1110,7 +1098,7 @@ function main() {
 				}
 			}
 
-			this.delayedSelection = this.isDelayedSelection(cell);
+			this.delayedSelection = this.isDelayedSelection(cell, me);
 			this.cell = null;
 
 			if (this.isSelectEnabled() && !this.delayedSelection) {
@@ -1216,11 +1204,11 @@ function main() {
 	keyHandler.bindControlKey(65, function() {
 		graph.selectAll();
 	});
-	
+
 	// Ctrl+D
 	keyHandler.bindControlKey(68, function(){
 		graph.setSelectionCells(graph.duplicateCells());
-	}); 
+	});
 
 	//bold
 	keyHandler.bindControlKey(66, function() {
@@ -1341,9 +1329,9 @@ function main() {
 
 
 	graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt) {
-		
+
 			selectionChanged(false);
-		
+
 	});
 
 
@@ -1373,7 +1361,7 @@ function main() {
 
 
 	selectionChanged = function(forceClear) {
-		
+
 		if (isDefined(grid)) {
 			grid.plugins[0].completeEdit();
 			configPanel.removeAll()
@@ -1683,7 +1671,7 @@ function main() {
 				'group': ' ' + getText('配置'),
 				'renderer': renderTimeBut
 			});
-			
+
 			properties.push({
 				'name': 'Frozen',
 				'text': getText('冻结'),
@@ -1789,11 +1777,11 @@ function main() {
 					help: function(config){
 			var cell = config.cell;
 			if(cell.getAttribute("Trigger") == "Probability"){
-				return "You have selected the <i>Probability</i> trigger for this action. The value of this equation is the probability of the action happening each unit of time. You can change the trigger type.";
+				return "您已为此操作选择了<i>概率</i>触发器。这个方程的值是每单位时间内动作发生的概率。您可以更改触发器类型。";
 			}else if(cell.getAttribute("Trigger") == "Condition"){
-				return "You have selected the <i>Condition</i> trigger for this action. When the equation evaluates to <tt>True</tt>, the action will happen. You can change the trigger type.";
+				return "您已经为此操作选择了<i>条件</i>触发器。当方程的计算结果为<tt>True</tt>时，将发生动作。您可以更改触发器类型。";
 			}else if(cell.getAttribute("Trigger") == "Timeout"){
-				return "You have selected the <i>Timeout</i> trigger for this action. The action will happen after the time specified by this equation passes. You can change the trigger type.";
+				return "您已经为此操作选择了<i>超时</i>触发器。这个动作将在这个方程式指定的时间过后发生。您可以更改触发器类型。";
 			}
 		}
 				}),
@@ -1820,7 +1808,7 @@ function main() {
 				'group': ' ' + getText('配置')
 			});
 		} else if (cell.value.nodeName == "State") {
-			bottomDesc = descBase + "The primitive representing the current state of an agent. A boolean yes/no property. You can connect states with transitions to move an agent between states." + descriptionLink("/states", "States");
+			bottomDesc = descBase + "图元代表一个主体的状态。布尔值yes / no属性。您可以将状态与过渡连接起来，从而让主体在状态之间移动。" + descriptionLink("/states", "States");
 
 			properties.push({
 				'name': 'Active',
@@ -1833,8 +1821,8 @@ function main() {
 
 			properties.push({
 				'name': 'Residency',
-				'text': getText('Residency') + ' = ',
-				'value': cell.getAttribute("驻留"),
+				'text': getText('驻留') + ' = ',
+				'value': cell.getAttribute("Residency"),
 				'group': ' ' + getText('配置'),
 				'editor': new EquationEditor({
 					help: "即使要停止状态，状态仍将保持活动状态的时间长度。"
@@ -1843,7 +1831,7 @@ function main() {
 			});
 
 		} else if (cell.value.nodeName == "Agents") {
-			bottomDesc = descBase + "Agent populations hold a collection of agents: individually simulated entities which may interact with each other." + descriptionLink("/agentpopulations", "Agent Populations");
+			bottomDesc = descBase + "主体群表示主体的集合：单个用于模拟的互相交互的实体。" + descriptionLink("/agentpopulations", "Agent Populations");
 
 
 			var dat = [];
@@ -1938,7 +1926,7 @@ function main() {
 					editable: false,
 					store: [
 						["Random", getText("随机")],
-						["Grid", getText("格子")],
+						["Grid", getText("网格")],
 						["Ellipse", getText("椭圆")],
 						["Network", getText("网络")],
 						["Custom Function", getText("自定义函数")]
@@ -1953,7 +1941,7 @@ function main() {
 				'value': cell.getAttribute("PlacementFunction"),
 				'group': ' ' + getText('几何'),
 				'editor': new EquationEditor({
-					help: "对于每个代理，该等式被评估一次。 它应返回一个表示初始位置的双元素向量，格式为<tt> {x，y} </ tt>。"
+					help: "对于每个主体，该等式被评估一次。 它应返回一个表示初始位置的双元素向量，格式为<tt> {x，y} </ tt>。"
 				}),
 				renderer: equationRenderer
 			});
@@ -1991,9 +1979,9 @@ function main() {
 		} else if (cellType == "Ghost") {
 			bottomDesc = descBase + "这个项目是另一个原始的'Ghost'。 它反映了源图元的值和属性。 您无法编辑Ghost的属性。 您需要编辑其源的属性。";
 			bottomDesc = bottomDesc + "<center style='padding-top: 6px'><a href='#' onclick='var x = findID(getSelected()[0].getAttribute(\"Source\"));highlight(x);'>Show Source <i class='fa fa-angle-right '></i></a></center>" + descriptionLink("/ghosting", "Ghosts");
-			
+
 		} else if (cellType == "Converter") {
-			bottomDesc = descBase + "转换器存储输入和输出数据表。 当输入源采用其中一个输入值时，转换器将采用相应的输出值。 如果当前输入源值不存在特定输入值，则对最近的输入邻居进行平均。 " + descriptionLink("/converters", "Converters");
+			bottomDesc = descBase + "转换器存储输入和输出数据表。 当输入源采用其中一个输入值时，转换器将采用相应的输出值。 如果当前输入源值不存在特定输入值，则对最近的输入邻居进行平均。" + descriptionLink("/converters", "Converters");
 			var n = neighborhood(cell);
 			var dat = [
 				["Time", "Time"]
@@ -2100,7 +2088,7 @@ function main() {
 		graph.fit();
 		graph.fit();
 	}
-	
+
 
 	// Override importCells to map key ID's
 
@@ -2112,11 +2100,11 @@ function main() {
 			getChildren(cell, false).forEach(setID);
 		}
 	};
-		
+
 	graph.cloneCells = function(cells){
-		
+
 		cells.forEach(setID);
-		
+
 		return mxGraph.prototype.cloneCells.apply(graph, arguments);
 	}
 
@@ -2135,12 +2123,12 @@ function main() {
 			}
 			return findID(oldID);
 		}
-	
-		
+
+
 		cells.forEach(setID);
-	
+
 		var newCells = mxGraph.prototype.importCells.apply(graph, arguments);
-	
+
 		var updateID = function(cell) {
 			if (cell.getAttribute("oldId") != undefined && cell.getAttribute("oldId") != "undefined") {
 				if (cell.value.nodeName == "Converter") {
@@ -2154,16 +2142,16 @@ function main() {
 					cell.setAttribute("Source", cellWithOldID(cell.getAttribute("Source")).id);
 				}
 			}
-			
+
 			if(getType(cell) == "Folder"){
 				getChildren(cell, false).forEach(updateID);
 			}
 		};
-		
+
 		newCells.forEach(updateID);
 
 		newCells.forEach(setID);
-		
+
 		return newCells;
 	}
 
@@ -2179,7 +2167,7 @@ function main() {
 				state.style[mxConstants.STYLE_DASHED] = 0;
 				//console.log(state.style);
 			}
-	
+
 		}
 	};
 
@@ -2187,7 +2175,7 @@ function main() {
 	{
 	    currentState: null,
 	    previousStyle: null,
-    
+
 	    mouseMove: function(sender, me)
 	    {
 	        if (this.currentState != null && me.getState() == this.currentState)
@@ -2245,7 +2233,7 @@ function main() {
 					/*if(getFontColor(state.cell) == undefined){
 						state.style[mxConstants.STYLE_FONTCOLOR] = mxConstants.NONE;
 					}*/
-					
+
 		        	state.shape.apply(state);
 		        	state.shape.reconfigure();
 				}
@@ -2254,8 +2242,8 @@ function main() {
 		mouseDown: function(){},
 		mouseUp: function(){}
 	});
-	
-	
+
+
 	window.doneLoading = true;
 
 };
@@ -2348,17 +2336,17 @@ function showContextMenu(node, e) {
 				if (cells != null)
 				{
 					var bb = graph.getBoundingBoxFromGeometry(cells);
-				
+
 					if (bb != null)
 					{
 						var t = graph.view.translate;
 						var s = graph.view.scale;
 						var dx = t.x;
 						var dy = t.y;
-					
+
 						var x = Math.round(graph.snap(pt.x / s - dx));
 						var y = Math.round(graph.snap(pt.y / s - dy));
-					
+
 						graph.cellsMoved(cells, x - bb.x, y - bb.y);
 					}
 				}
@@ -2373,11 +2361,11 @@ function showContextMenu(node, e) {
 		},
 		scope: this
 	};
-	
+
 	var menuItems = [];
 	if(viewConfig.allowEdits){
-		
-	
+
+
 	if (!selected) {
 		var menuItems = [
 			/*editActions.paste,
@@ -2569,7 +2557,7 @@ function showContextMenu(node, e) {
 
 
 		}
-		
+
 		if(!mxClipboard.isEmpty()){
 			menuItems.unshift("-");
 			menuItems.unshift(paste);
@@ -2628,7 +2616,7 @@ function showContextMenu(node, e) {
 		menu.down('#bold').setChecked(currentStyleIs(mxConstants.FONT_BOLD));
 		menu.down('#italic').setChecked(currentStyleIs(mxConstants.FONT_ITALIC));
 		menu.down('#underline').setChecked(currentStyleIs(mxConstants.FONT_UNDERLINE));
-		
+
         menu.down("#sizeCombo").setValue(graph.getCellStyle(selectedItems[0])[mxConstants.STYLE_FONTSIZE]);
         menu.down("#fontCombo").setValue(graph.getCellStyle(selectedItems[0])[mxConstants.STYLE_FONTFAMILY]);
 	} else {
@@ -2642,407 +2630,4 @@ function showContextMenu(node, e) {
 	menu.focus();
 }
 
-
-mxCellRenderer.prototype.initControl = function(state, control, handleEvents, clickHandler)
-{
-	var graph = state.view.graph;
-	
-	// In the special case where the label is in HTML and the display is SVG the image
-	// should go into the graph container directly in order to be clickable. Otherwise
-	// it is obscured by the HTML label that overlaps the cell.
-	var isForceHtml = graph.isHtmlLabel(state.cell) && mxClient.NO_FO &&
-		graph.dialect == mxConstants.DIALECT_SVG;
-
-	if (isForceHtml)
-	{
-		control.dialect = mxConstants.DIALECT_PREFERHTML;
-		control.init(graph.container);
-		control.node.style.zIndex = 1;
-	}
-	else
-	{
-		control.init(state.view.getOverlayPane());
-	}
-
-	var node = control.innerNode || control.node;
-	
-	if (clickHandler)
-	{
-		if (graph.isEnabled())
-		{
-			node.style.cursor = 'pointer';
-		}
-		
-		mxEvent.addListener(node, 'click', clickHandler);
-		mxEvent.addListener(node, 'touchstart', clickHandler); /*SFR XXX adding touch support*/
-	}
-	
-	if (handleEvents)
-	{
-		mxEvent.addGestureListeners(node,
-			function (evt)
-			{
-				graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt, state));
-				mxEvent.consume(evt);
-			},
-			function (evt)
-			{
-				graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt, state));
-			});
-	}
-	
-	return node;
-};
-
-
-mxSvgCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation, dir)
-{
-	if (this.textEnabled && str != null)
-	{
-		rotation = (rotation != null) ? rotation : 0;
-		
-		var s = this.state;
-		x += s.dx;
-		y += s.dy;
-		
-		if (this.foEnabled && format == 'html')
-		{
-			var style = 'vertical-align:top;';
-			
-			if (clip)
-			{
-				style += 'overflow:hidden;max-height:' + Math.round(h) + 'px;max-width:' + Math.round(w) + 'px;';
-			}
-			else if (overflow == 'fill')
-			{
-				style += 'width:' + Math.round(w) + 'px;height:' + Math.round(h) + 'px;';
-			}
-			else if (overflow == 'width')
-			{
-				style += 'width:' + Math.round(w) + 'px;';
-				
-				if (h > 0)
-				{
-					style += 'max-height:' + Math.round(h) + 'px;';
-				}
-			}
-
-			if (wrap && w > 0)
-			{
-				style += 'width:' + Math.round(w) + 'px;white-space:normal;';
-			}
-			else
-			{
-				style += 'white-space:nowrap;';
-			}
-			
-			// Uses outer group for opacity and transforms to
-			// fix rendering order in Chrome
-			var group = this.createElement('g');
-			
-			if (s.alpha < 1)
-			{
-				group.setAttribute('opacity', s.alpha);
-			}
-
-			var fo = this.createElement('foreignObject');
-			fo.setAttribute('pointer-events', 'all');
-			
-			var div = this.createDiv(str, align, valign, style, overflow);
-			
-			// Ignores invalid XHTML labels
-			if (div == null)
-			{
-				return;
-			}
-			else if (dir != null)
-			{
-				div.setAttribute('dir', dir);
-			}
-
-			group.appendChild(fo);
-			this.root.appendChild(group);
-			
-			// Code that depends on the size which is computed after
-			// the element was added to the DOM.
-			var ow = 0;
-			var oh = 0;
-			
-			// Padding avoids clipping on border and wrapping for differing font metrics on platforms
-			var padX = 2;
-			var padY = 2;
-
-			// NOTE: IE is always export as it does not support foreign objects
-			if (mxClient.IS_IE && (document.documentMode == 9 || !mxClient.IS_SVG))
-			{
-				// Handles non-standard namespace for getting size in IE
-				var clone = document.createElement('div');
-				
-				clone.style.cssText = div.getAttribute('style');
-				clone.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-				clone.style.position = 'absolute';
-				clone.style.visibility = 'hidden';
-
-				// Inner DIV is needed for text measuring
-				var div2 = document.createElement('div');
-				div2.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
-				div2.innerHTML = (mxUtils.isNode(str)) ? str.outerHTML : str;
-				clone.appendChild(div2);
-
-				document.body.appendChild(clone);
-
-				// Workaround for different box models
-				if (document.documentMode != 8 && document.documentMode != 9 && s.fontBorderColor != null)
-				{
-					padX += 2;
-					padY += 2;
-				}
-
-				if (wrap && w > 0)
-				{
-					var tmp = div2.offsetWidth;
-					
-					// Workaround for adding padding twice in IE8/IE9 standards mode if label is wrapped
-					var padDx = 0;
-					
-					// For export, if no wrapping occurs, we add a large padding to make
-					// sure there is no wrapping even if the text metrics are different.
-					// This adds support for text metrics on different operating systems.
-					if (!clip && this.root.ownerDocument != document)
-					{
-						var ws = clone.style.whiteSpace;
-						clone.style.whiteSpace = 'nowrap';
-						
-						// Checks if wrapped width is equal to non-wrapped width (ie no wrapping)
-						if (tmp == div2.offsetWidth)
-						{
-							padX += this.fontMetricsPadding;
-						}
-						else if (document.documentMode == 8 || document.documentMode == 9)
-						{
-							padDx = -2;
-						}
-						
-						// Restores the previous white space
-						// This is expensive!
-						clone.style.whiteSpace = ws;
-					}
-					
-					// Required to update the height of the text box after wrapping width is known
-					tmp = tmp + padX;
-					
-					if (clip)
-					{
-						tmp = Math.min(tmp, w);
-					}
-					
-					clone.style.width = tmp + 'px';
-	
-					// Padding avoids clipping on border
-					ow = div2.offsetWidth + padX + padDx;
-					oh = div2.offsetHeight + padY;
-					
-					// Overrides the width of the DIV via XML DOM by using the
-					// clone DOM style, getting the CSS text for that and
-					// then setting that on the DIV via setAttribute
-					clone.style.display = 'inline-block';
-					clone.style.position = '';
-					clone.style.visibility = '';
-					clone.style.width = ow + 'px';
-					
-					div.setAttribute('style', clone.style.cssText);
-				}
-				else
-				{
-					// Padding avoids clipping on border
-					ow = div2.offsetWidth + padX;
-					oh = div2.offsetHeight + padY;
-				}
-
-				clone.parentNode.removeChild(clone);
-				fo.appendChild(div);
-			}
-			else
-			{
-				// Workaround for export and Firefox where sizes are not reported or updated correctly
-				// when inside a foreignObject (Opera has same bug but it cannot be fixed for all cases
-				// using this workaround so foreignObject is disabled).
-				if (this.root.ownerDocument != document || mxClient.IS_FF)
-				{
-					// Getting size via local document for export
-					div.style.visibility = 'hidden';
-					document.body.appendChild(div);
-				}
-				else
-				{
-					fo.appendChild(div);
-				}
-
-				var sizeDiv = div;
-				
-				if (sizeDiv.firstChild != null && sizeDiv.firstChild.nodeName == 'DIV')
-				{
-					sizeDiv = sizeDiv.firstChild;
-				}
-				
-				var tmp = sizeDiv.offsetWidth;
-				
-				// For export, if no wrapping occurs, we add a large padding to make
-				// sure there is no wrapping even if the text metrics are different.
-				if (!clip && wrap && w > 0 && this.root.ownerDocument != document)
-				{
-					var ws = div.style.whiteSpace;
-					div.style.whiteSpace = 'nowrap';
-					
-					if (tmp == sizeDiv.offsetWidth)
-					{
-						padX += this.fontMetricsPadding;
-					}
-					
-					div.style.whiteSpace = ws;
-				}
-
-				ow = tmp + padX;
-
-				// Recomputes the height of the element for wrapped width
-				if (wrap)
-				{
-					if (clip)
-					{
-						ow = Math.min(ow, w);
-					}
-					
-					div.style.width = ow + 'px';
-				}
-
-				ow = sizeDiv.offsetWidth + padX;
-				oh = sizeDiv.offsetHeight + 2;
-
-				if (div.parentNode != fo)
-				{
-					fo.appendChild(div);
-					div.style.visibility = '';
-				}
-			}
-
-			if (clip)
-			{
-				oh = Math.min(oh, h);
-				ow = Math.min(ow, w);
-			}
-
-			if (overflow == 'fill')
-			{
-				w = Math.max(w, ow);
-				h = Math.max(h, oh);
-			}
-			else if (overflow == 'width')
-			{
-				w = Math.max(w, ow);
-				h = oh;
-			}
-			else
-			{
-				w = ow;
-				h = oh;
-			}
-
-			if (s.alpha < 1)
-			{
-				group.setAttribute('opacity', s.alpha);
-			}
-			
-			var dx = 0;
-			var dy = 0;
-
-			if (align == mxConstants.ALIGN_CENTER)
-			{
-				dx -= w / 2;
-			}
-			else if (align == mxConstants.ALIGN_RIGHT)
-			{
-				dx -= w;
-			}
-			
-			x += dx;
-			
-			// FIXME: LINE_HEIGHT not ideal for all text sizes, fix for export
-			if (valign == mxConstants.ALIGN_MIDDLE)
-			{
-				dy -= h / 2 - 2;
-			}
-			else if (valign == mxConstants.ALIGN_BOTTOM)
-			{
-				dy -= h - 3;
-			}
-			
-			// Workaround for rendering offsets
-			// TODO: Check if export needs these fixes, too
-			//if (this.root.ownerDocument == document)
-			{
-				if (!mxClient.IS_OP && mxClient.IS_GC && mxClient.IS_MAC)
-				{
-					dy += 1;
-				}
-				else if (mxClient.IS_FF && mxClient.IS_WIN)
-				{
-					dy -= 1;
-				}
-			}
-			
-			if(mxClient.IS_FF ){
-				dy -= 1; /* SFR XX FIXME Spacing is off without this */
-			}else{
-				dy -= 2; /* SFR XX FIXME Spacing is off without this */
-			}
-			
-			
-			y += dy;
-
-			var tr = (s.scale != 1) ? 'scale(' + s.scale + ')' : '';
-
-			if (s.rotation != 0 && this.rotateHtml)
-			{
-				tr += 'rotate(' + (s.rotation) + ',' + (w / 2) + ',' + (h / 2) + ')';
-				var pt = this.rotatePoint((x + w / 2) * s.scale, (y + h / 2) * s.scale,
-					s.rotation, s.rotationCx, s.rotationCy);
-				x = pt.x - w * s.scale / 2;
-				y = pt.y - h * s.scale / 2;
-			}
-			else
-			{
-				x *= s.scale;
-				y *= s.scale;
-			}
-
-			if (rotation != 0)
-			{
-				tr += 'rotate(' + (rotation) + ',' + (-dx) + ',' + (-dy) + ')';
-			}
-
-			group.setAttribute('transform', 'translate(' + Math.round(x) + ',' + Math.round(y) + ')' + tr);
-			fo.setAttribute('width', Math.round(Math.max(1, w)));
-			fo.setAttribute('height', Math.round(Math.max(1, h)));
-			
-			// Adds alternate content if foreignObject not supported in viewer
-			if (this.root.ownerDocument != document)
-			{
-				var alt = this.createAlternateContent(fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
-				
-				if (alt != null)
-				{
-					fo.setAttribute('requiredFeatures', 'http://www.w3.org/TR/SVG11/feature#Extensibility');
-					var sw = this.createElement('switch');
-					sw.appendChild(fo);
-					sw.appendChild(alt);
-					group.appendChild(sw);
-				}
-			}
-		}
-		else
-		{
-			this.plainText(x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir);
-		}
-	}
-};
 
