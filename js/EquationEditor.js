@@ -118,7 +118,7 @@ function EquationWindow(config) {
 
 
 	var helpData = [
-		["Mathematical Functions", [
+		["数学函数", [
 			["Round", "Round(##Value$$)", "Rounds a number to the nearest integer.", ["Round(3.6)", "4"]],
 			["Round Up", "Ceiling(##Value$$)", "Rounds a number up to the nearest integer.", ["Ceiling(3.6)", "4"]],
 			["Round Down", "Floor(##Value$$)", "Rounds a number down to the nearest integer.", ["Floor(3.6)", "3"]],
@@ -147,7 +147,7 @@ function EquationWindow(config) {
 			["Logit", "Logit(##Value$$)", "Returns the logit transformation of the value. Converts values on a 0 to 1 scale to a -Infinity to Infinity scale.", ["Logit(0.5)", "0"]],
 			["Expit", "Expit(##Value$$)", "Returns the expit transformation of the value. Converts values on a -Infinity to Infinity scale to a 0 to 1 scale.", ["Expit(0)", "0.5"]]
 		]],
-		["Time Functions", [
+		["时间函数", [
 			["Seconds", "Seconds()", "The current time in seconds.", ["Seconds()*1000", "The time in milliseconds"]],
 			["Minutes", "Minutes()", "The current time in minutes.", ["Seconds() = Minutes()*60", "True"]],
 			["Hours", "Hours()", "The current time in hours."],
@@ -162,7 +162,7 @@ function EquationWindow(config) {
 			["Time End", "TimeEnd()", "The time at which the simulation ends including units.", ["TimeStart() + TimeLength() = TimeEnd()", "True"]],
 			["Seasonal", "Seasonal(Peak=0)", "Model of seasonality influences. Sine wave with a period of one year, a peak amplitude of one, and a peak at the specified time.", ["Seasonal({9 Months})*0.5+1", "A wave that oscillates from 0 to 1 and peaks in September"]]
 		]],
-		["Historical Functions", [
+		["历史函数", [
 			["Delay", "Delay(##[Primitive]$$, ##Delay Length$$, ##Default Value$$)", "Returns the value of a primitive for a specified length of time ago. Default Value stands in for the primitive value in the case of negative times.", "Delay([Income], {5 Years})"],
 			["Delay1", "Delay1(##[Primitive]$$, ##Delay Length$$, ##Initial Value$$)", "Returns a smoothed, first-order exponential delay of the value of a primitive. The Initial Value is optional.", "Delay1([Income], 5, 10000)"],
 			["Delay3", "Delay3(##[Primitive]$$, ##Delay Length$$, ##Initial Value$$)", "Returns a smoothed, third-order exponential delay of the value of a primitive. The Initial Value is optional.", "Delay3([Income], {20 Months}, 10000)"],
@@ -176,7 +176,7 @@ function EquationWindow(config) {
 			["Correlation", "PastCorrelation(##[Primitive]$$, ##[Primitive]$$, ##Period = All Time$$)", "Returns the correlation between the values that two primitives have taken on over the course of the simulation. The third optional argument is an optional time window to limit the calculation.", ["PastCorrelation([Income], [Expenditures], {10 Years})", "The correlation between income and expenditures over the past 10 years."]],
 			["Fix", "Fix(##Value$$, ##Period=-1$$)", "Takes the dynamic value and forces it to be fixed over the course of the period. If period is -1, the value is held constant over the course of the whole simulation.", ["Fix(Rand(), {5 Years})", "Chooses a new random value every five years"]]
 		]],
-		["Random Number Functions", [
+		["随机数函数", [
 			["Uniform Distribution", "Rand(##Minimum$$, ##Maximum$$)", "Generates a uniformly distributed random number between the minimum and maximum. The minimum and maximum are optional and default to 0 and 1 respectively.", ["Rand()", "0.7481"]],
 			["Normal Distribution", "RandNormal(##Mean$$, ##Standard Deviation$$)", "Generates a normally distributed random number with a mean and a standard deviation. The mean and standard deviation are optional and default to 0 and 1 respectively.", ["RandNormal(10, 1)", "11.23"]],
 			["Lognormal Distribution", "RandLognormal(##Mean$$, ##Standard Deviation$$)", "Generates a log-normally distributed random number with a mean and a standard deviation."],
@@ -190,7 +190,7 @@ function EquationWindow(config) {
 			["Beta Distribution", "RandBeta(##Alpha$$, ##Beta$$)", "Generates a Beta distributed random number."],
 			["Custom Distribution", "RandDist(##X$$, ##Y$$)", "Generates a random number according to a custom distribution. Takes two vectors with the x- and y-coordinates respectively of points defining the distribution. Points are interpolated linearly. The distribution does not have to be normalized such that its area is 1, but the points must be sorted from smallest to largest x locations. You may also pass a single vector containing pairs of {x, y} coordinates (e.g. { {1, 0}, {3, 4}, {4, 0} } ).", ["RandDist({0, 1, 2, 3}, {0, 5, 1, 0})", "1.2"]]
 		]],
-		["Agent Functions", [
+		["主体函数", [
 			["Find All", "##[Agent Population]$$.FindAll()", "Returns a vector of all the agents in the agent population."],
 			["Find State", "##[Agent Population]$$.FindState(##[State]$$)", "Returns a vector of agents in the specified state.", ["[University].FindState([Smoker])", "All smokers in the University population"]],
 			["Find Not State", "##[Agent Population]$$.FindNotState(##[State]$$)", "Returns a vector of agents not in the specified state.", ["[University].FindNotState([Smoker])", "All non-smokers in the University population"]],
@@ -217,7 +217,7 @@ function EquationWindow(config) {
 			["Width", "Width(##Agent$$)", "The width of the geographic region an agent is within."],
 			["Height", "Height(##Agent$$)", "The height of the geographic region an agent is within."]
 		]],
-		["Vector Functions", [
+		["向量函数", [
 			["Range", "##Start$$:##End$$", "Creates a vector with a range of sequential values going from start to end. To use step sizes other than 1, place the step size between the start and the end, for example \"0:0.5:10\".", ["1:5", "{1, 2, 3, 4, 5}"]],
 			["Length", "##Vector$$.Length()", "The number of elements in a vector. Count() is a synonym for length.", ["{1, 1, 2, 3}.Length()", "4"]],
 			["Select", "##Vector$${##Selector$$}", "Selects one or more elements from a vector. The selector can be an integer or vector of integers, a string or vector of strings (for named vectors), or a vector of booleans.", ["{1,3,7}{2}", "3"]],
@@ -238,7 +238,7 @@ function EquationWindow(config) {
 			["Keys", "##Vector$$.Keys()", "Returns the keys for a named vector as a vector. Any element without a key will be omitted.", ["{a: 1, b: 4, b: 9}.Keys()", "{'a', 'b', 'c'}"]],
 			["Values", "##Vector$$.Values()", "Returns the values of a vector (stripping away any keys if it is a named vector).", ["{a: 1, b: 4, b: 9}.Values()", "{1, 4, 9}"]]
 		]],
-		["General Functions", [
+		["一般函数", [
 			["If Then Else", "IfThenElse(##Test Condition$$, ##Value if True$$, ##Value if False$$)", "Tests a condition and returns one value if the condition is true and another value if the condition is false.", ["IfThenElse(20 > 10, 7, 5)", "7"]],
 			["Lookup", "Lookup(##Value$$, ##Values Vector$$, ##Results Vector$$)", "Finds the Value in the Values Vector and returns the corresponding item in the Results Vector. If the exact Value is not found in the Values Vector, linear interpolation of the nearby values will be used.", ["Lookup(6, {5, 7}, {10, 15})", "12.5"]],
 			["Pulse", "Pulse(##Time$$, ##Height$$, ##Width=0$$, ##Repeat=-1$$)", "Creates a pulse input at the specified time with the specified Height and Width. Height defaults to 1 and Width defaults to 0. Repeat is optional and will create a pulse train with the specified time if positive..", "Pulse({10 Years}, 5, 2)"],
@@ -247,7 +247,7 @@ function EquationWindow(config) {
 			["Pause", "Pause()", "Pauses the simulation and allows sliders to be adjusted. Often used in combination with an IfThenElse function.", "IfThenElse(Years() = 20, Pause(), 0)"],
 			["Stop", "Stop()", "Immediately terminates the simulation. Often used in combination with an IfThenElse function.", "IfThenElse(Rand() < 0.01, Stop(), 0)"]
 		]],
-		["String Functions", [
+		["字符串函数", [
 			["Length", "##String$$.Length()", "The length of a string in characters.", ['"abcde".Length()', "5"]],
 			["Range", "##String$$.Range(##Characters$$)", "Obtains a certain character or set of characters.", ['"abcde".Range(2:4)', '"bcd"']],
 			["Split", "##String$$.Split(##Deliminator$$)", "Splits a string into a vector at the locations of the Deliminator.", ['"abcde".Split("c")', '{"ab", "de"}']],
@@ -259,7 +259,7 @@ function EquationWindow(config) {
 			["Trim", "##String$$.Trim()", "Removes whitespace on either side of a string.", ['" abc  ".Trim()', '"abc"']],
 			["Parse", "##String$$.Parse()", "Converts a string to a number.", ['"1.2".Parse() + 3.3', '4.5']]
 		]],
-		["Programming Functions", [
+		["编程函数", [
 			["Variables", "##Variable$$ <- ##Value$$", "Assigns a value to a reusable variable.", ['x <- 10\nx^2', "100"]],
 			["If-Then-Else", "If ##Condition$$ Then\n  ##Expression$$\nElse If ##Condition$$ Then\n  ##Expression$$\nElse\n  ##Expression$$\nEnd If", "Test one or more conditions and selectively execute code based on these tests."],
 			["While Loop", "While ##Condition$$\n  ##Expression$$\nEnd Loop", "Repeats an action until a condition is no longer true.", ['x <- 1\nWhile x < 10\n  x <- x*2\nEnd Loop\nx', "16"]],
@@ -270,12 +270,12 @@ function EquationWindow(config) {
 			["Throwing Errors", "throw '##Message$$'", "Passes an error message up to the nearest Try-Catch block or aborts the simulation with the error message.", 'throw "Error: Index out of range."'],
 			["Error Handling", "Try\n  ##Expression$$\nCatch ##ErrorString$$\n  ##Expression // Handle the error$$\nEnd Try", 'Attempts to execute some code. If an error occurs, the error is passed as a string variable to the catch block which will then be executed. The catch block will not be executed unless an error occurs.', 'Try\n  mean(x)\nCatch err\n  alert("Could not calculate the mean of the variable. Error Message: "+err)\nEnd Try']
 		]],
-		["User Input Functions", [
+		["用户输入函数", [
 			["Alert", "Alert(##Message$$)", "Show an alert dialogue with the message.", 'Alert("An event has occurred.")'],
 			["Prompt", "Prompt(##Message$$, ##Default=''$$)", "Prompts the user for an input and returns it. Can optionally provide a default value for the input.", 'timeScale <- Prompt("What time scale should we use?.", 10).Parse()'],
 			["Confirm", "Confirm(##Message$$)", "Prompts the user to confirm a statement and returns a boolean based on whether they confirmed it or not.", 'advanced <- Confirm("Use advanced mode?")']
 		]],
-		["Statistical Distributions", [
+		["统计分布函数", [
 			["CDFNormal", "CDFNormal(##x$$, ##Mean=0$$, ##StandardDeviation=1$$)", "Returns the value of x in the CDF of the Normal Distribution.", ["CDFNormal(1.96)", "0.975"]],
 			["PDFNormal", "PDFNormal(##x$$, ##Mean=0$$, ##StandardDeviation=1$$)", "Returns the value of x in the PDF of the Normal Distribution.", ["PDFNormal(1.5, 0, 1)", "0.12"]],
 			["InvNormal", "InvNormal(##p$$, ##Mean=0$$, ##StandardDeviation=1$$)", "Returns the value of p in the inverse CDF of the Normal Distribution.", ["InvNormal(0.975)", "1.96"]],
