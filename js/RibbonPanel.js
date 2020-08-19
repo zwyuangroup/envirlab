@@ -1088,10 +1088,10 @@ var RibbonPanel = function(graph, mainPanel, configPanel) {
             items: FileMenu.concat([{
                     hidden: is_ebook,
                     cls: 'button',
-                    glyph: 0xf015,
+                    //glyph: 0xf015,
                     iconCls: 'icon-icon',
 
-                    href: '//',
+                    //href: '//',
                     tooltip: 'Home'
                 },
                 '->',
