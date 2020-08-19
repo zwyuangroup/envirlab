@@ -45,7 +45,7 @@ function sendGraphtoServer(graph) {
 
 				success: function(result, request) {
 					if (parseInt(result.responseText) != result.responseText) {
-						console.log("Insight Save Issue:\n\n" + result.responseText);
+						console.log("保存发布:\n\n" + result.responseText);
 					} else {
 						drupal_node_ID = result.responseText;
 						setSaveEnabled(waitingToSendToServer);
@@ -55,7 +55,7 @@ function sendGraphtoServer(graph) {
 					}
 				},
 				failure: function(result, request) {
-					console.log("Insight Not Saved:\n\n" + result.responseText);
+					console.log("未保存:\n\n" + result.responseText);
 					/*Ext.MessageBox.hide();
 		            Ext.MessageBox.show({
 		                title: 'Error',
@@ -85,7 +85,7 @@ function validPrimitiveName(name, primitive) {
 		if (name.length > 0 && (!(/[\[\]\(\)\{\}\<\>\'\"]/.test(name)))) {
 			return true;
 		} else {
-			mxUtils.alert(getText("Primitive names cannot contain brackets, parenthesis, or quotes."));
+			mxUtils.alert(getText("图元名称不能包括方括号、圆括号和引号。"));
 			return false;
 		}
 	} else {
@@ -732,7 +732,7 @@ function updateProperties() {
 						sendGraphtoServer(graph);
 						selectionChanged(false);
 					} else {
-						showNotification(getText("You must specify a name for the Insight."), "error", true);
+						showNotification(getText("你必须指定一个名称"), "error", true);
 					}
 				}
 			}]

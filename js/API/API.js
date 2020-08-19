@@ -855,7 +855,7 @@ Examples:
 function runModel(config) {
 	if (simulationRunning()) {
 		if( (!simulate.config.silent) && (! config.resultsWindow) ){
-			mxUtils.alert(getText("You have an existing simulation running that has not yet completed. Either close the results window or press the window's 'Stop' button. You may then run a new simulation."));
+			mxUtils.alert(getText("您有一个尚未完成的现有模拟运行。 关闭结果窗口或按窗口的“停止”按钮。 然后，您可以运行新的模拟。"));
 			simulate.resultsWindow.show();
 			return;
 		}
@@ -2233,10 +2233,10 @@ function showEditor(primitive, annotations) {
 	} else if(primitive.value.nodeName == "Stock"){
 		var checkbox = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('Restrict this stock to positive values'),
+			boxLabel: getText('将此库存限制为正值'),
 			checked: getNonNegative(primitive),
 			autoEl: {
-                'data-qtip': "If checked, the value of the stock will not be allowed to fall below zero. The rates of outflows may be adjusted to ensure this condition is met."
+                'data-qtip': "如果选中，则不允许库的值低于零。 可以调整流出率以确保满足该条件。"
             }
 		});
 				
@@ -2254,10 +2254,10 @@ function showEditor(primitive, annotations) {
 	} else if(primitive.value.nodeName == "Flow"){
 		var checkbox = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('Restrict this flow to positive rates'),
+			boxLabel: getText('将此流量限制为正值'),
 			checked: getNonNegative(primitive),
 			autoEl: {
-                'data-qtip': "If checked, the flow will not be applied if the calculated rate is less than zero."
+                'data-qtip': "如果选中，则如果计算的速率小于零，则不会应用流量。"
             }
 		});
 				
@@ -2296,21 +2296,21 @@ function showEditor(primitive, annotations) {
 		
 		var recalculate = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('Recalculate each time step'),
+			boxLabel: getText('重新计算每个时间步'),
 			checked: getTriggerRecalculate(primitive),
 			margin: '0 0 0 15',
 			autoEl: {
-                'data-qtip': "If this is not true, the equation will be evaluated once and the trigger time scheduled based on that calculation. If this is true, the timeout or probability will be recalculated as the state of the system changes."
+                'data-qtip': "如果不是这样，则将对等式进行一次评估，并根据该计算调度触发时间。 如果是这样，则会在系统状态发生变化时重新计算超时或概率。"
             }
 		});
 		
 		var repeat = new Ext.form.field.Checkbox({
 			xtype: "checkboxfield",
-			boxLabel: getText('Repeat after triggering'),
+			boxLabel: getText('触发后重复'),
 			checked: getTriggerRepeat(primitive),
 			margin: '0 0 0 15',
 			autoEl: {
-                'data-qtip': "If this is true, the transition will be rescheduled after it is triggered. If this is not true, the transition will only be rescheduled if its source state becomes active again."
+                'data-qtip': "如果是这样，则在触发转换后将重新安排转换。 如果不是这样，则只有在源状态再次变为活动状态时才会重新调度转换。"
             }
 		});
 		
@@ -3703,7 +3703,7 @@ function runAction(code, errHeader, button) {
 	} catch (err) {
 		errHeader = errHeader || '';
 		Ext.Msg.show({
-			title: getText('Action Error'),
+			title: getText('动作错误'),
 			msg: errHeader + '<p><tt>' + err + "</tt></p><p><b>Code:</b></p><p><tt><pre>" + code + "</pre></tt></p>",
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR

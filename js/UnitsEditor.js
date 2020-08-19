@@ -91,7 +91,7 @@ function UnitsWindow(config) {
 		var root = tree.getRootNode();
 
 
-		var unitsTxt = "Distance, Area and Volume\r Metric\r  Millimeters\r  Centimeters\r  Meters\r  Kilometers\r  -\r  Square Millimeters\r  Square Centimeters\r  Square Meters\r  Hectares\r  Square Kilometers\r  -\r  Cubic Millimeters\r  Cubic Centimeters\r  Liters\r  Cubic Meters\r English\r  Inches\r  Feet\r  Yards\r  Miles\r  -\r  Square Inches\r  Square Feet\r  Square Yards\r  Acres\r  Square Miles\r  -\r  Fluid Ounces\r  Quarts\r  Gallons\r  Acre Feet\rVelocity, Acceleration and Flow\r Metric\r  Meters per Second\r  Meters per Second Squared\r  Kilometers per Hour\r  Kilometers per Hour Squared\r  -\r  Liters per Second\r  Cubic Meters per Second\r  -\r  Kilograms per Second\r English\r  Feet per Second\r  Feet per Second Squared\r  Miles per Hour\r  Miles per Hour Squared\r  -\r  Gallons per Second\r  Gallons per Minute\r  -\r  Pounds per Second\rMass, Force and Pressure\r Metric\r  Milligrams\r  Grams\r  Kilograms\r  Tonnes\r  -\r  Newtons\r  -\r  Pascals\r  Kilopascals\r  Bars\r  Atmospheres\r English\r  Ounces\r  Pounds\r  Tons\r  -\r  Pounds Force\r  -\r  Pounds per Square Inch\rTemperature and Energy\r Metric\r  Degrees Celsius\r  Degrees Kelvin\r  -\r  Joules\r  Kilojoules\r  -\r  Watts\r  Kilowatts\r  Megawatts\r  Gigawatts\r  -\r  Amperes\r  -\r  Millivolts\r  Volts\r  Kilovolts\r  -\r  Coulombs\r  -\r  Farads\r English\r  Degrees Fahrenheit\r  -\r  Calories\r  Kilocalories\r  British Thermal Units\rTime\r Milliseconds\r Seconds\r Minutes\r Hours\r Days\r Weeks\r Months\r Quarters\r Years\rMoney\r Dollars\r Flow of Dollars\r  Dollars per Second\r  Dollars per Hour\r  Dollars per Day\r  Dollars per Week\r  Dollars per Month\r  Dollars per Quarter\r  Dollars per Year\r -\r Euros\r Flow of Euros\r  Euros per Second\r  Euros per Hour\r  Euros per Day\r  Euros per Week\r  Euros per Month\r  Euros per Quarter\r  Euros per Year\rBusiness and Commerce\r People\r Customers\r Employees\r Workers\r -\r Factories\r Buildings\r -\r Units\r Widgets\r Parts\rEcology and Nature\r Individuals\r Animals\r Plants\r Trees\r Biomass\rChemistry\r Atoms\r Molecules\r -\r Moles";
+		var unitsTxt = "距离，面积和体积\r 公制\r  毫米\r  厘米\r  米\r  公里\r  -\r  平方毫米\r  平方厘米\r  平方米\r  公顷\r  平方公里\r  -\r  立方毫米\r  立方厘米\r  升\r  立方米\r 英制\r  英寸\r  英尺\r  码\r  英里\r  -\r  平方英寸\r  平方英尺\r  平方码\r  英亩\r  平方英里\r  -\r  液体盎司\r  夸脱\r  加仑\r  英亩英尺\r速度，加速度和流量\r 公制\r  米每秒\r  米每秒的平方\r  公里每小时\r  平方公里每小时的平方\r  -\r  公升每秒\r  立方米每秒\r  -\r  公斤每秒\r 英制\r  英尺每秒\r  英尺每秒的平方\r  英里每小时\r  英里每小时的平方\r  -\r  加仑每秒\r  加仑每分钟\r  -\r  磅每秒\r质量，力和压力\r 公制\r  毫克\r  克\r  千克\r  吨\r  -\r  牛顿\r  -\r  帕斯卡\r  千帕斯卡\r  巴\r  标准大气压\r 英制\r  盎司\r  磅\r  吨\r  -\r  磅力\r  -\r  磅每平方英寸\r温度和能量\r 公制\r  摄氏度\r  开尔文度\r  -\r  焦耳\r  千焦耳\r  -\r  瓦特\r  千瓦\r  兆瓦\r  千兆瓦\r  -\r  安培\r  -\r  毫伏\r  伏特\r  千伏特\r  -\r  库仑\r  -\r  法拉\r 英制\r  华氏度\r  -\r  卡路里\r  千卡\r  英国热量单位\r时间\r 毫秒\r 秒\r 分钟\r 小时\r 天\r 周\r 月份\r 季度\r 年\r货币\r 美元\r 美元流\r  美元每秒\r  美元每小时\r  美元每天\r  美元每周\r  美元每月\r  美元每季度\r  美元每年\r -\r 欧元\r 欧元流\r  欧元每秒\r  欧元每小时\r  欧元每天\r  欧元每周\r  欧元每月\r  欧元每季度\r  欧元每年\r商业和商务\r 人员\r 客户\r 员工\r 工人\r -\r 工厂\r 建筑物\r -\r 单位\r 小部件\r 零件\r生态与自然\r 个体\r 动物\r 植物\r 树木\r 生物质\r化学\r 原子\r 分子\r -\r 摩尔";
 
 
 
@@ -210,7 +210,7 @@ function UnitsWindow(config) {
 		buttons: [{
 			id: 'units_but',
 			scale: "large",
-			text: getText('Unit Conversions'),
+			text: getText('单位转换'),
 			glyph: 0xf1de,
 			handler: function() {
 				var setting = getSetting();
