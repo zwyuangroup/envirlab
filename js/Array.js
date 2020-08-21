@@ -54,7 +54,7 @@ function showArrayWin() {
 		columns: [{
 			sortable: false,
             menuDisabled: true,
-			text: getText("Dimensions"),
+			text: getText("维度"),
 			dataIndex: 'text',
 			flex: 1,
 			editor: {
@@ -66,7 +66,7 @@ function showArrayWin() {
 			width: 40,
 			items: [{
 				iconCls: "units-remove-icon",
-				tooltip: getText("Delete"),
+				tooltip: getText("删除"),
 				handler: function(grid, rowIndex, columnIndex) {
 					dimensionsStore.remove(dimensionsStore.getAt(rowIndex));
 					config.getLayout().setActiveItem(0);
@@ -96,12 +96,12 @@ function showArrayWin() {
 		},
 		bbar: ["->", {
 			glyph: 0xf055,
-			text: getText('Add Dimension'),
+			text: getText('增加维度'),
 			scope: this,
 			handler: function() {
 				dimensionsEditor.completeEdit();
 				dimensionsStore.add({
-					text: getText("New Dimension"),
+					text: getText("新维度"),
 					data: '{"keys":[], "primitives":[]}'
 				})
 				var index = dimensionsStore.count() - 1;
@@ -146,7 +146,7 @@ function showArrayWin() {
 		plugins: [itemsEditor],
 		columns: [{
 			sortable: false,
-			text: getText("Dimension Keys"),
+			text: getText("维度键值"),
 			dataIndex: 'text',
 			flex: 1,
 			editor: {
@@ -159,7 +159,7 @@ function showArrayWin() {
             menuDisabled: true,
 			items: [{
 				iconCls: "units-remove-icon",
-				tooltip: getText("Delete"),
+				tooltip: getText("删除"),
 				handler: function(grid, rowIndex, columnIndex) {
 					itemsStore.remove(itemsStore.getAt(rowIndex));
 					saveDimension();
@@ -177,12 +177,12 @@ function showArrayWin() {
 		},
 		bbar: ["->", {
 			glyph: 0xf055,
-			text: getText('Add Key'),
+			text: getText('增加键'),
 			scope: this,
 			handler: function() {
 				itemsEditor.completeEdit();
 				itemsStore.add({
-					text: getText("New Key")
+					text: getText("新键")
 				})
 				var index = itemsStore.count() - 1;
 				items.getSelectionModel()
@@ -234,7 +234,7 @@ function showArrayWin() {
 						valueField: 'pid',
 						queryMode: 'local',
 						store: primitiveConfigStore,
-						emptyText: getText("Data"),
+						emptyText: getText("数据"),
 						listeners: {
 							change: function() {
 								saveDimension();
@@ -266,7 +266,7 @@ function showArrayWin() {
 					items,
 					{
 						xtype:"displayfield",
-						value: getText("Apply dimension to")+":"
+						value: getText("应用维度于")+":"
 					},
 					boxselect
 				]
@@ -287,7 +287,7 @@ function showArrayWin() {
 	};
 
 	var win = new Ext.Window({
-		title: getText('Array Designer'),
+		title: getText('数组设计'),
 		layout: 'fit',
 		closeAction: 'destroy',
 		border: false,
@@ -301,14 +301,14 @@ function showArrayWin() {
 		buttons: [{
 			scale: "large",
 			glyph: 0xf05c,
-			text: getText('Cancel'),
+			text: getText('取消'),
 			handler: function() {
 				win.close();
 			}
 		}, {
 			scale: "large",
 			glyph: 0xf00c,
-			text: getText('Apply'),
+			text: getText('应用'),
 			handler: function() {
 			    graph.getModel().beginUpdate();
 

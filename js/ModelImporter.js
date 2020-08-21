@@ -11,9 +11,9 @@ terms of the Insight Maker Public License (https://InsightMaker.com/impl).
 
 
 function showInsertModelWindow(pt) {
-	Ext.Msg.prompt('Insert Insight Maker Model', 'Enter the URL for the Insight Maker model you wish to insert (e.g. <i>' + base_path + '/insight/1234</i>). This model will be inserted as a component into your current model.', function(btn, url) {
+	Ext.Msg.prompt('插入模型', 'Enter the URL for the Insight Maker model you wish to insert (e.g. <i>' + base_path + '/insight/1234</i>). This model will be inserted as a component into your current model.', function(btn, url) {
 		if (btn == 'ok') {
-			var progress = Ext.MessageBox.wait(getText("Inserting Model..."), undefined, {
+			var progress = Ext.MessageBox.wait(getText("插入模型..."), undefined, {
 				icon: 'run-icon',
 				width: 300,
 				closable: false,

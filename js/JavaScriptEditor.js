@@ -51,13 +51,13 @@ function JavaScriptWindow(config) {
 
 
 	var win = new Ext.Window({
-		title: getText('JavaScript Editor'),
+		title: getText('JavaScript编辑器'),
 		layout: {
 			type: "fit"
 		},
 		tools: [{
 			type: 'help',
-			tooltip: getText('Get Help'),
+			tooltip: getText('帮助'),
 			callback: function(panel, tool, event) {
 				showURL("/sites/default/files/API/files/API-js.html");
 			}
@@ -77,7 +77,7 @@ function JavaScriptWindow(config) {
 		buttons: [{
 			scale: "large",
 			glyph: 0xf05c,
-			text: getText('Cancel'),
+			text: getText('取消'),
 			handler: function() {
 				win.close();
 				if (config.parent != "") {
@@ -87,7 +87,7 @@ function JavaScriptWindow(config) {
 		}, {
 			scale: "large",
 			glyph: 0xf00c,
-			text: getText('Apply'),
+			text: getText('应用'),
 			handler: function() {
 				if (config.parent != "") {
 

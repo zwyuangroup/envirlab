@@ -49,7 +49,7 @@ function getEditor(item) {
     } else if (typeof val == 'boolean') {
         return new Ext.form.ComboBox({
             triggerAction: "all",
-            store: [["false", getText("No")], ["true", getText("Yes")]],
+            store: [["false", getText("否")], ["true", getText("是")]],
             selectOnFocus: false,
 			editable: false
         });
@@ -319,7 +319,7 @@ var ConfigPanel = function()
 		tools:[
 			{
 			    type: 'help',
-			    tooltip: getText('Insight Maker Help'),
+			    tooltip: getText('帮助'),
 			    callback: function(panel, tool, event) {
 			        showURL("/help");
 			    }
@@ -336,7 +336,7 @@ var ConfigPanel = function()
 		}},
         collapsible: ! mxClient.IS_TOUCH, /*XXX SFR FIXME TODO: Bug on mobile devices with collapsing when the grid has been created */
 		header: ! is_embed,
-        title: getText("Configuration"),
+        title: getText("配置"),
         border: false,
 		layout: {
 			type: "vbox",

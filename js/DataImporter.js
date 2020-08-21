@@ -24,7 +24,7 @@ function importData(targetStore){
 			{
 	        	xtype: 'box',
 				margin: 10,
-	        	html: '<center>'+getText('Copy and paste the contents from your CSV file or tab-delimited file into the data field below.')+'</center>'
+	        	html: '<center>'+getText('将CSV文件或制表符分隔的文件中的内容复制并粘贴到下面的数据字段中。')+'</center>'
 	    	},
 			{
 				xtype: 'textareafield',
@@ -33,17 +33,17 @@ function importData(targetStore){
 			    id: 'impData',
 			    allowBlank: false,
 				selectOnFocus: true,
-				value: getText("Example Input, Example Output")+"\n24, 62\n641, 12\n234, 56\n123, 19",height:195
+				value: getText("示例输入，示例输出")+"\n24, 62\n641, 12\n234, 56\n123, 19",height:195
 			}, 
             {
 				xtype: "checkboxfield",
-                fieldLabel: getText('Include First Row'),
+                fieldLabel: getText('含第一行'),
                 inputValue: '1',
                 name: 'impIncludeHeader',
                 id: 'impIncludeHeader'
             },
 			new Ext.form.NumberField({
-                fieldLabel: getText('Input Column Index'),
+                fieldLabel: getText('输入列索引'),
                 name: 'impInputIndex',
                 id: 'impInputIndex',
                 allowBlank: false,
@@ -52,7 +52,7 @@ function importData(targetStore){
 				value: 1
             }),
 			new Ext.form.NumberField({
-                fieldLabel: getText('Output Column Index'),
+                fieldLabel: getText('输出列索引'),
                 name: 'impOutputIndex',
                 id: 'impOutputIndex',
                 allowBlank: false,
@@ -64,7 +64,7 @@ function importData(targetStore){
 	});
 								
     var win = new Ext.Window({
-        title: getText('Import Converter Data'),
+        title: getText('输入转换器数据'),
         layout: 'fit',
         closeAction: 'destroy',
         border: false,
@@ -82,7 +82,7 @@ function importData(targetStore){
         {
             scale: "large",
             glyph: 0xf05c,
-            text: getText('Cancel'),
+            text: getText('取消'),
             handler: function()
             {
                 win.close();
@@ -91,17 +91,17 @@ function importData(targetStore){
         {
             scale: "large",
             glyph: 0xf00c,
-            text: getText('Import'),
+            text: getText('导入'),
             handler: function()
             {	
 				try{
 					var data = parseCSV(Ext.getCmp("impData").getValue());
 				}catch(err){
-					mxUtils.alert(getText("There was an error with your data file. It should be a valid CSV or tab-delimited text file."));
+					mxUtils.alert(getText("数据文件出错。它应该是一个有效的CSV或制表符分隔的文本文件。"));
 					return;
 				}
 				if(data.length<=0){
-					mxUtils.alert(getText("Could not import as no data entered."));
+					mxUtils.alert(getText("无法导入，因为没有输入数据。"));
 					return;
 				}
 				
@@ -109,7 +109,7 @@ function importData(targetStore){
 				var outIndex = Ext.getCmp("impOutputIndex").getValue()-1;
 				
 				if(!(inIndex<data[0].length && outIndex<data[0].length)){
-					mxUtils.alert(getText("Invalid column index for data file. Maximum number of columns is %s.", data[0].length))
+					mxUtils.alert(getText("数据文件的列索引无效。最大列数为%s。", data[0].length))
 					return;
 				}
 				
@@ -121,12 +121,12 @@ function importData(targetStore){
 						var x = flexibleParseFloat(data[i][inIndex]);
 						var y = flexibleParseFloat(data[i][outIndex]);
 						if(isNaN(x) || isNaN(y)){
-							mxUtils.alert(getText("(%s, %s) is not a pair of numbers. Skipping row during import.", data[i][inIndex], data[i][outIndex]));
+							mxUtils.alert(getText("(%s, %s)不是一对数字。导入期间跳过行。", data[i][inIndex], data[i][outIndex]));
 						}else{
 							items.push({xVal: x, yVal: y});
 						}
 					}catch(err){
-						mxUtils.alert(getText("Skipping badly formed row (%s, %s) on import.", data[i][inIndex], data[i][outIndex]));
+						mxUtils.alert(getText("在导入时跳过格式错误的行(%s, %s)。", data[i][inIndex], data[i][outIndex]));
 					}
 				}
 				targetStore.add(items);

@@ -45,7 +45,7 @@ function RichTextWindow(config) {
 
 
 	var win = new Ext.Window({
-		title: getText('Note Editor'),
+		title: getText('注释编辑器'),
 		layout: {
 			type: "fit"
 		},
@@ -72,13 +72,13 @@ function RichTextWindow(config) {
 			name: 'richTextItem',
 			id: 'richTextItem',
 			allowBlank: true,
-			emptyText: getText("Enter a Note..."),
+			emptyText: getText("输入注释..."),
 			value: config.html
 		})],
 		buttons: [{
 			scale: "large",
 			glyph: 0xf05c,
-			text: getText('Cancel'),
+			text: getText('取消'),
 			handler: function() {
 				win.close();
 				if (config.parent != "") {
@@ -88,7 +88,7 @@ function RichTextWindow(config) {
 		}, {
 			scale: "large",
 			glyph: 0xf00c,
-			text: getText('Apply'),
+			text: getText('应用'),
 			handler: function() {
 				if (config.parent != "") {
 

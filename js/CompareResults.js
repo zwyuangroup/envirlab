@@ -87,32 +87,32 @@ function doCompare(){
 			items: [
 
 				Ext.create('Ext.form.field.Tag', {
-					fieldLabel: getText('Results to Compare'),
+					fieldLabel: getText('比较结果'),
 					itemId: 'selResults',
 					displayField: 'rname',
 					filterPickList: true,
 					valueField: 'rid',
 					queryMode: 'local',
 					store: compareResults.resultsStore,
-					emptyText: getText('Select results windows')
+					emptyText: getText('选择结果窗口')
 				}),
 				
 				Ext.create('Ext.form.field.Tag', {
-					fieldLabel: getText('Primitives to Contrast'),
+					fieldLabel: getText('图元对比'),
 					itemId: 'selPrimitives',
 					displayField: 'pname',
 					filterPickList: true,
 					valueField: 'pid',
 					queryMode: 'local',
 					store: compareResults.primitiveStore,
-					emptyText: getText('Select primitives')
+					emptyText: getText('选择图元')
 				})
 			
 			]
 		});
 
 		compareResults.win = new Ext.Window({
-			title: getText('Compare Simulation Results'),
+			title: getText('比较模拟结果'),
 			layout: 'fit',
 			closeAction: 'hide',
 			border: false,
@@ -130,25 +130,25 @@ function doCompare(){
 			buttons: [{
 				scale: "large",
 				glyph: 0xf05c,
-				text: getText('Cancel'),
+				text: getText('取消'),
 				handler: function() {
 					compareResults.win.close();
 				}
 			}, {
 				scale: "large",
 				glyph: 0xf00c,
-				text: getText('Compare'),
+				text: getText('比较'),
 				handler: function() {
 					var primitives = compareResults.win.down("#selPrimitives").getValue();
 					if(primitives.length == 0){
-						showNotification(getText("You must select at least one primitive to contrast."), "error", true);
+						showNotification(getText("你必须选择至少一个图元进行比较。"), "error", true);
 						return;
 					}
 					var res = compareResults.win.down("#selResults").getValue().map(function(x){
 						return +x;
 					});
 					if(res.length < 2){
-						showNotification(getText("You must select at least two results windows to compare."), "error", true);
+						showNotification(getText("你必须选择至少两个结果窗口进行比较。"), "error", true);
 						return;
 					}
 					
@@ -167,7 +167,7 @@ function doCompare(){
 					
 					for(var i=1; i<results.length; i++){
 						if(results[i].Time.join(",") != results[0].Time.join(",")){
-							showNotification(getText("Compared results windows must have the same simulation time settings."), "error", true);
+							showNotification(getText("比较结果的窗口必须具有相同的模拟时间设置。"), "error", true);
 							return;
 						}
 					}
@@ -182,7 +182,7 @@ function doCompare(){
 						results.forEach(function(r){
 							if(!r[p.id]){
 								if(!failed){
-										showNotification(getText("The primitive '"+getName(p)+"' does not appear in all the results."), "error", true);
+										showNotification(getText("图元 '"+getName(p)+"' 没有出现在所有结果里。"), "error", true);
 								}
 								failed = true;
 								return;

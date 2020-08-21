@@ -84,18 +84,18 @@ function ConverterWindow(config) {
 			headersDisabled: true,
 			markDirty: false
 		},
-		tbar: ['Click on the chart to add a point.<br/>Shift-click to remove. Option-click to move.', '->', {
+		tbar: ['点击图表增加点.<br/>按Shift键点击可以移除。 按Alt键点击可以移动。 ', '->', {
 			hidden: !viewConfig.allowEdits,
-			text: getText('Import'),
+			text: getText('导入'),
 			glyph: 0xf0ce,
-			tooltip: getText('Import data from a CSV or other text file'),
+			tooltip: getText('从CSV或其他文本格式文件输入数据'),
 			handler: function() {
 				importData(store);
 			}
 		}, {
 			glyph: 0xf055,
 			iconCls: 'green-icon',
-			text: getText('Add Point'),
+			text: getText('增加点'),
 			handler: function() {
 				var e = {
 					xVal: 0,
@@ -116,7 +116,7 @@ function ConverterWindow(config) {
 
 		columns: [{
 			id: 'xVal',
-			header: getText('Input Value'),
+			header: getText('输入数值'),
 			dataIndex: 'xVal',
 			flex: 1,
 			sortable: false,
@@ -128,7 +128,7 @@ function ConverterWindow(config) {
 				selectOnFocus: true
 			}
 		}, {
-			header: getText('Output Value'),
+			header: getText('输出数值'),
 			dataIndex: 'yVal',
 			flex: 1,
 			sortable: false,
@@ -144,7 +144,7 @@ function ConverterWindow(config) {
 			width: 40,
 			items: [{
 				iconCls: "units-remove-icon",
-				tooltip: getText("Delete"),
+				tooltip: getText("删除"),
 				handler: function(grid, rowIndex, columnIndex) {
 					store.remove(store.getAt(rowIndex));
 
@@ -182,7 +182,7 @@ function ConverterWindow(config) {
 			position: 'left',
 			fields: ["yVal"],
 			title: {
-				text: getText("Output"),
+				text: getText("输出"),
 				fontSize: 14
 			},
 			titleMargin: 20,
@@ -192,7 +192,7 @@ function ConverterWindow(config) {
 			position: 'bottom',
 			fields: ["xVal"],
 			title: {
-				text: getText("Input") + " (" + clean(sourceName) + ")",
+				text: getText("输入") + " (" + clean(sourceName) + ")",
 				fontSize: 14
 			},
 			titleMargin: 16,
@@ -246,12 +246,12 @@ function ConverterWindow(config) {
 
 
 	var win = new Ext.Window({
-		title: getText('Converter Data Specification'),
+		title: getText('转换器数据确定'),
 		layout: 'border',
 		closeAction: 'destroy',
 		tools: [{
 			type: 'help',
-			tooltip: getText('Get Help'),
+			tooltip: getText('帮助'),
 			callback: function(panel, tool, event) {
 				showURL("/converters");
 			}
@@ -379,7 +379,7 @@ function ConverterWindow(config) {
 				id: 'equationUnitsBut',
 				text: formatUnitsBut(cell.getAttribute("Units")),
 				glyph: 0xf1de,
-				tooltip: getText('Primitive units'),
+				tooltip: getText('图元单位'),
 				handler: function() {
 					var unitsWindow = new UnitsWindow({
 						parent: "",
@@ -392,7 +392,7 @@ function ConverterWindow(config) {
 			'->', {
 				scale: "large",
 				glyph: 0xf05c,
-				text: getText('Cancel'),
+				text: getText('取消'),
 				handler: function() {
 					win.close();
 					if (config.parent != "") {
@@ -403,7 +403,7 @@ function ConverterWindow(config) {
 				hidden: !viewConfig.allowEdits,
 				scale: "large",
 				glyph: 0xf00c,
-				text: getText('Apply'),
+				text: getText('应用'),
 				handler: function() {
 					editor.completeEdit();
 					if (config.parent != "") {
