@@ -1518,7 +1518,7 @@ function main() {
 				if (is_ebook) {
 					topDesc = "<center><big>Select a primitive to see its properties.</big></center>";
 				} else {
-					topDesc = "<center><br><br><img src='" + builder_path + "/images/nju.png' width=130 /><br><br><big><strong>南京大学环境虚拟仿真实验平台</strong></big><br/><br/><br/><div style = padding:10px>环境虚拟仿真平台隶属于南京大学国家级“社会经济环境系统虚拟仿真实验教学中心”，是支撑物质循环及其环境效应教学科研的基础平台。<br><br>该平台立足于强大的互联网技术，旨在将环境要素模拟、物质循环过程模拟、环境风险预警与健康评估、环境经济政策模拟、生命周期管理等学科内容进行融合与集成，从环境安全、健康风险和资源可持续供给等多视角、多尺度剖析环境问题，为环境及相关专业学生培养提供实验条件，为环境保护事业的科学化与大众化提供基础支撑。</div></center>";
+					topDesc = "<center><br><br><img src='" + builder_path + "/images/nju.png' width=130 /><br><br><big><strong>环境虚拟仿真实验平台</strong></big><br/><br/><br/><div style = padding:10px>环境虚拟仿真平台是支撑物质循环及其环境效应教学科研的基础平台，立足于强大的互联网技术，旨在将环境要素模拟、物质循环过程模拟、环境风险预警与健康评估、环境经济政策模拟、生命周期管理等学科内容进行融合与集成，从环境安全、健康风险和资源可持续供给等多视角、多尺度剖析环境问题，为环境及相关专业学生培养提供实验条件，为环境保护事业的科学化与大众化提供基础支撑。<br><br>该平台是在<a href='https://insightmaker.com/'>Insight Maker</a>平台源代码基础上经过进一步开发形成的，后续仍将围绕物质循环及其环境效应相关环境虚拟仿真实验内容进行持续开发和更新，欢迎大家使用和交流。</div></center>";
 				}
 			} else {
 
