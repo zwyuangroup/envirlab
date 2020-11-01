@@ -279,7 +279,7 @@ var sensitivityController = {}
 
 
 			var dat = {
-				name: cell.getAttribute("name") + " 分位数表",
+				name: cell.getAttribute("name") + "（分位数表）",
 				type: "table"
 			};
 			
@@ -419,13 +419,13 @@ var sensitivityController = {}
 				legend: "right",
 				legendStatic: true,
 				data: chartSeries,
-				name: cell.getAttribute("name") + " " + getText("分位数图"),
+				name: cell.getAttribute("name") + getText("（分位数图）"),
 				type: "chart",
 				horizontalGrid: false,
 				verticalGrid: false,
 				xType: "Numeric",
 				xData: results[0].Time,
-				xLabel: "Time",
+				xLabel: "时间",
 				yLabel: cell.getAttribute("name"),
 				yMin: Math.min.apply(null, allVals),
 				yMax: Math.max.apply(null, allVals)
@@ -435,14 +435,14 @@ var sensitivityController = {}
 
 			if (sensitivityController.showRuns) {
 				dat = {
-					name: cell.getAttribute("name") + " " + getText("运行表格"),
+					name: cell.getAttribute("name") + getText("（运行表格）"),
 					type: "table"
 				};
 				var headers = [];
 				var series = [];
 				var chartSeries = [];
 				for (var i = 0; i < nRuns; i++) {
-					headers.push("Run " + (i + 1));
+					headers.push("运行" + (i + 1));
 					series.push(ress[i]);
 					chartSeries.push({
 						title: "",
@@ -457,13 +457,13 @@ var sensitivityController = {}
 				data.push({
 					legend: "none",
 					data: chartSeries,
-					name: cell.getAttribute("name") + " " + getText("运行图表"),
+					name: cell.getAttribute("name") + getText("（运行图表）"),
 					type: "chart",
 					horizontalGrid: true,
 					verticalGrid: true,
 					xType: "Numeric",
 					xData: results[0].Time,
-					xLabel: "Time",
+					xLabel: "时间",
 					yLabel: cell.getAttribute("name")
 				});
 

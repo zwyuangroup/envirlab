@@ -194,11 +194,11 @@ function doCompare(){
 						}
 						
 						tabs.push({
-							name: getName(p)+" Chart",
+							name: getName(p)+"（图形）",
 							type: "chart",
 							xData: results[0].Time,
 							xType: "numeric",
-							xLabel: "Time",
+							xLabel: "时间",
 							yLabel: getName(p),
 							legend: "top",
 							verticalGrid:true,
@@ -216,7 +216,7 @@ function doCompare(){
 						});
 						
 						tabs.push({
-							name: getName(p)+" Table",
+							name: getName(p)+"（表格）",
 							type: "table",
 							data: series,
 							header: headers
@@ -226,7 +226,7 @@ function doCompare(){
 						return;
 					}
 					
-					showData("Simulation Results Comparison", tabs);
+					showData("模拟结果比较", tabs);
 					
 					compareResults.win.close();
 					  
