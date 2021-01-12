@@ -177,7 +177,7 @@ primitiveBank.flow.setAttribute('TimeIndependent', false);
 setValuedProperties(primitiveBank.flow);
 
 primitiveBank.link = doc.createElement('Link');
-primitiveBank.link.setAttribute('name', getText('链接'));
+primitiveBank.link.setAttribute('name', getText('Link'));
 primitiveBank.link.setAttribute('Note', '');
 primitiveBank.link.setAttribute('BiDirectional', false);
 
